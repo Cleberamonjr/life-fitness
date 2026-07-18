@@ -2,10 +2,12 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
+<meta name="color-scheme" content="light">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Cuidando da Diástase · Andressa</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+html{color-scheme:light only;}
 :root{
   --bg:#FAF5EE;--bg2:#F5EDE2;--card:#FFFFFF;--card2:#FDF8F2;--card3:#F7EFE4;
   --border:#E8D5C0;--border2:#D4BC9F;
@@ -179,6 +181,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .tag-gold{background:var(--gold-light);color:var(--gold);border:1px solid var(--border2);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;display:inline-block;}
 .tag-sage{background:var(--sage-light);color:var(--sage);border:1px solid #C0D8C4;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;display:inline-block;}
 ::-webkit-scrollbar{width:0;}
+
+@media (prefers-color-scheme: dark) {
+  html { filter: none !important; background:#FAF5EE !important; }
+  body { background:#FAF5EE !important; color:#2C1A0C !important; }
+  .card { background:#FFFFFF !important; border-color:#E8D5C0 !important; }
+  .card2,.d-block input,.inp-block input { background:#FDF8F2 !important; }
+}
 </style>
 </head>
 <body>
