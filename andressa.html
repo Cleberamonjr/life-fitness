@@ -7,100 +7,101 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
-  --bg:#120E0B;--bg2:#1A1410;--card:#211C17;--card2:#2A2319;--card3:#342C21;
-  --border:#3D3228;--border2:#4A3D2F;
-  --gold:#D4AF7A;--gold-g:#D4AF7A30;--gold-d:#D4AF7A15;--gold2:#E8C990;
-  --rose:#C97B8A;--rose-g:#C97B8A28;--rose-d:#C97B8A12;
-  --beige:#F5E6D0;--beige2:#D4C4AD;--beige3:#A89070;
-  --sage:#8FAF96;--sage-g:#8FAF9620;
-  --text:#F5E6D0;--text2:#D4C4AD;--muted:#6B5A45;--muted2:#8B7355;
-  --r:22px;--rs:16px;--rx:12px;
+  --bg:#FAF5EE;--bg2:#F5EDE2;--card:#FFFFFF;--card2:#FDF8F2;--card3:#F7EFE4;
+  --border:#E8D5C0;--border2:#D4BC9F;
+  --gold:#B8862A;--gold-g:#B8862A22;--gold-d:#B8862A0E;--gold-light:#F5E6C8;
+  --rose:#B05472;--rose-g:#B0547222;--rose-d:#B054720E;--rose-light:#F9E8EE;
+  --beige:#7A5C3C;--beige2:#A07850;--beige3:#C4A878;
+  --sage:#4A7D5A;--sage-g:#4A7D5A20;--sage-light:#E8F2EB;
+  --text:#2C1A0C;--text2:#5A3C20;--muted:#A08060;--muted2:#8B6A48;
+  --shadow:0 2px 16px rgba(120,80,40,.10);
+  --shadow-md:0 4px 24px rgba(120,80,40,.12);
+  --shadow-lg:0 8px 40px rgba(120,80,40,.14);
+  --r:20px;--rs:14px;--rx:10px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;max-width:430px;margin:0 auto;padding-bottom:96px;overflow-x:hidden;}
 
 /* HEADER */
-.header{padding:52px 20px 14px;position:sticky;top:0;z-index:100;background:linear-gradient(180deg,var(--bg) 65%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
+.header{padding:52px 20px 14px;position:sticky;top:0;z-index:100;background:linear-gradient(180deg,var(--bg) 70%,transparent);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
 .hrow{display:flex;justify-content:space-between;align-items:center;}
-.greeting{font-size:23px;font-weight:800;letter-spacing:-.5px;background:linear-gradient(135deg,var(--beige) 40%,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.date-sub{font-size:12px;color:var(--muted2);margin-top:3px;letter-spacing:.3px;}
-.streak-pill{background:linear-gradient(135deg,var(--rose-d),var(--gold-d));border:1px solid var(--rose);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:5px;color:var(--gold);box-shadow:0 0 16px var(--rose-g);}
+.greeting{font-size:23px;font-weight:800;letter-spacing:-.5px;color:var(--text);}
+.greeting span{background:linear-gradient(135deg,var(--rose),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.date-sub{font-size:12px;color:var(--muted2);margin-top:3px;}
+.streak-pill{background:linear-gradient(135deg,var(--rose-light),var(--gold-light));border:1px solid var(--border2);border-radius:999px;padding:7px 14px;font-size:12px;font-weight:800;display:flex;align-items:center;gap:5px;color:var(--rose);box-shadow:var(--shadow);}
 
 /* LAYOUT */
 .sec{padding:0 16px;margin-top:14px;}
 .spacer{height:10px;}
-.sec-lbl{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;padding:0 4px;display:flex;align-items:center;gap:8px;}
+.sec-lbl{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.14em;margin-bottom:10px;padding:0 2px;display:flex;align-items:center;gap:8px;}
 .sec-lbl::after{content:'';flex:1;height:1px;background:var(--border);}
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:0 4px 28px rgba(0,0,0,.35),0 1px 0 rgba(212,175,122,.06) inset;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
 
-/* HERO CARD */
-.hero-today{background:linear-gradient(145deg,#1E1710,#231A12);border:1px solid #4A3A28;border-radius:26px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(212,175,122,.10),0 1px 0 rgba(212,175,122,.08) inset;}
-.hero-today::before{content:'';position:absolute;top:-80px;right:-80px;width:220px;height:220px;background:radial-gradient(circle,var(--rose-g) 0%,transparent 70%);pointer-events:none;}
-.hero-today::after{content:'';position:absolute;bottom:-60px;left:-60px;width:180px;height:180px;background:radial-gradient(circle,var(--gold-g) 0%,transparent 70%);pointer-events:none;}
+/* HERO */
+.hero-today{background:linear-gradient(145deg,#FFF8F0,#FFF0F4);border:1px solid var(--border);border-radius:26px;padding:22px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:var(--shadow-lg);}
+.hero-today::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,var(--rose-g) 0%,transparent 70%);pointer-events:none;}
+.hero-today::after{content:'';position:absolute;bottom:-50px;left:-50px;width:160px;height:160px;background:radial-gradient(circle,var(--gold-g) 0%,transparent 70%);pointer-events:none;}
 .hero-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;}
-.hero-title{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.14em;}
-.hero-date{font-size:11px;color:var(--muted);}
+.hero-title{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.14em;}
+.hero-date{font-size:11px;color:var(--muted2);}
 .hero-rings{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px;}
 .hero-ring-item{display:flex;flex-direction:column;align-items:center;gap:5px;}
 .hero-ring-item svg{width:76px;height:76px;}
 .hero-ring-lbl{font-size:10px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;text-align:center;}
 .hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.hero-stat{background:rgba(0,0,0,.25);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.hero-stat{background:rgba(255,255,255,.8);border:1px solid var(--border);border-radius:var(--rs);padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 6px rgba(120,80,40,.06);}
 .hero-stat-icon{width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
 .hero-stat-val{font-size:17px;font-weight:800;letter-spacing:-.5px;line-height:1;}
 .hero-stat-lbl{font-size:10px;color:var(--muted2);margin-top:2px;font-weight:600;}
 
 /* DIARY */
-.diary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.diary-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
 .d-block label{font-size:10px;color:var(--muted2);font-weight:700;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em;}
-.d-block input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:var(--rx);padding:12px 8px;color:var(--text);font-size:15px;font-weight:700;text-align:center;outline:none;transition:all .2s;}
+.d-block input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rx);padding:12px 8px;color:var(--text);font-size:15px;font-weight:700;text-align:center;outline:none;transition:all .2s;}
 .d-block input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-g);}
 .diary-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
-.d-chip{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--muted2);}
-.d-chip span{color:var(--beige);font-weight:700;}
+.d-chip{background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:5px 12px;font-size:12px;color:var(--muted2);}
+.d-chip span{color:var(--text);font-weight:700;}
 
-/* SAVE BTN */
-.save-btn{width:100%;background:linear-gradient(135deg,var(--rose),#B06070);border:none;color:#fff;border-radius:var(--rs);padding:14px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px var(--rose-g);letter-spacing:.3px;}
+/* BUTTONS */
+.save-btn{width:100%;background:linear-gradient(135deg,var(--rose),#8A3050);border:none;color:#fff;border-radius:var(--rs);padding:14px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px var(--rose-g);letter-spacing:.3px;}
 .save-btn:active{transform:scale(.98);opacity:.9;}
-.save-btn.gold{background:linear-gradient(135deg,#C4983A,var(--gold));box-shadow:0 4px 20px var(--gold-g);}
+.save-btn.gold{background:linear-gradient(135deg,#C4943A,var(--gold));box-shadow:0 4px 16px var(--gold-g);}
 
 /* WATER */
 .water-big{text-align:center;font-size:52px;font-weight:900;color:var(--gold);letter-spacing:-2px;line-height:1;transition:all .3s;}
 .water-goal{text-align:center;font-size:12px;color:var(--muted2);margin:5px 0 12px;}
-.water-track{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:14px;}
+.water-track{height:10px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:14px;}
 .water-fill{height:100%;background:linear-gradient(90deg,var(--rose),var(--gold));border-radius:99px;transition:width .5s cubic-bezier(.34,1.56,.64,1);}
 .water-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
-.wbtn{background:var(--rose-d);border:1px solid var(--rose-g);color:var(--rose);border-radius:var(--rs);padding:13px 6px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;}
-.wbtn:active{background:var(--rose-g);transform:scale(.97);}
-.wbtn.danger{background:rgba(180,60,60,.08);border-color:rgba(180,60,60,.2);color:#c87878;}
-.wbtn.danger:active{background:rgba(180,60,60,.15);}
+.wbtn{background:var(--rose-light);border:1px solid var(--border2);color:var(--rose);border-radius:var(--rs);padding:13px 6px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;box-shadow:0 1px 6px var(--rose-g);}
+.wbtn:active{transform:scale(.97);}
+.wbtn.danger{background:var(--bg2);border-color:var(--border);color:var(--muted2);}
 
 /* EXERCISES */
-.ex-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:0;margin-bottom:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.25);}
-.ex-card.done{border-color:var(--sage);box-shadow:0 0 20px var(--sage-g);}
-.ex-img-wrap{position:relative;height:180px;overflow:hidden;cursor:pointer;}
-.ex-img-wrap img{width:100%;height:100%;object-fit:cover;filter:brightness(.7);transition:filter .3s;}
-.ex-card.done .ex-img-wrap img{filter:brightness(.5) saturate(.6);}
-.ex-img-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;}
-.ex-title{font-size:15px;font-weight:800;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.8);}
-.ex-sets-pill{display:inline-block;background:var(--gold);color:#120E0B;border-radius:999px;padding:4px 12px;font-size:11px;font-weight:800;margin-top:5px;}
-.ex-done-overlay{position:absolute;inset:0;background:rgba(143,175,150,.15);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .3s;}
-.ex-card.done .ex-done-overlay{opacity:1;}
-.ex-done-check{width:56px;height:56px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 20px rgba(143,175,150,.4);}
-.ex-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;}
-.ex-note{font-size:12px;color:var(--muted2);flex:1;}
-.ex-chk-btn{background:var(--card2);border:1px solid var(--border2);color:var(--text2);border-radius:var(--rx);padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;user-select:none;}
-.ex-chk-btn:active{transform:scale(.96);}
-.ex-card.done .ex-chk-btn{background:var(--sage-g);border-color:var(--sage);color:var(--sage);}
+.ex-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow .2s;}
+.ex-card.done{border-color:var(--sage);box-shadow:0 4px 20px var(--sage-g);}
+.ex-header{padding:16px 16px 12px;display:flex;align-items:center;gap:14px;cursor:pointer;user-select:none;}
+.ex-header:active{opacity:.8;}
+.ex-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.ex-info{flex:1;}
+.ex-name{font-size:14px;font-weight:800;color:var(--text);margin-bottom:3px;transition:all .2s;}
+.ex-card.done .ex-name{text-decoration:line-through;color:var(--muted);}
+.ex-sets{font-size:12px;font-weight:700;color:var(--gold);background:var(--gold-light);border:1px solid var(--border);border-radius:999px;display:inline-block;padding:3px 10px;margin-bottom:3px;}
+.ex-note{font-size:11px;color:var(--muted2);}
+.ex-chk-wrap{width:32px;height:32px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;transition:all .25s cubic-bezier(.34,1.56,.64,1);color:#fff;}
+.ex-card.done .ex-chk-wrap{background:var(--sage);border-color:var(--sage);transform:scale(1.08);}
+.ex-divider{height:1px;background:var(--border);margin:0 16px;}
+.ex-tip{padding:10px 16px;font-size:12px;color:var(--muted2);line-height:1.6;}
 
 /* MEALS */
-.meal{display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:opacity .15s;}
+.meal{display:flex;align-items:flex-start;gap:12px;padding:13px 0;border-bottom:1px solid var(--border);cursor:pointer;user-select:none;transition:opacity .15s;}
 .meal:last-child{border-bottom:none;padding-bottom:0;}
 .meal:first-child{padding-top:0;}
-.meal:active{opacity:.75;}
+.meal:active{opacity:.7;}
 .meal-t{font-size:11px;font-weight:800;color:var(--gold);min-width:38px;padding-top:2px;}
 .meal-body{flex:1;}
-.meal-n{font-size:13px;font-weight:600;margin-bottom:2px;transition:all .2s;}
+.meal-n{font-size:13px;font-weight:600;margin-bottom:2px;color:var(--text);transition:all .2s;}
 .meal-d{font-size:12px;color:var(--muted2);line-height:1.6;}
 .meal.done .meal-n{text-decoration:line-through;color:var(--muted);}
 .meal-chk{width:26px;height:26px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;margin-top:1px;color:#fff;transition:all .25s cubic-bezier(.34,1.56,.64,1);}
@@ -109,9 +110,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 /* CORPO */
 .corpo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .inp-block label{font-size:11px;color:var(--muted2);font-weight:700;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.1em;}
-.inp-block input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 8px;color:var(--text);font-size:16px;font-weight:700;text-align:center;outline:none;transition:all .2s;}
+.inp-block input{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:var(--rs);padding:12px 8px;color:var(--text);font-size:16px;font-weight:700;text-align:center;outline:none;transition:all .2s;}
 .inp-block input:focus{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-g);}
-.latest-card{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;}
+.latest-card{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
 .latest-block{background:var(--card2);border:1px solid var(--border);border-radius:var(--rs);padding:14px;text-align:center;}
 .latest-num{font-size:24px;font-weight:900;letter-spacing:-.5px;}
 .latest-lbl{font-size:10px;color:var(--muted2);margin-top:3px;}
@@ -124,15 +125,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .hist-v{font-weight:700;font-size:12px;}
 .del-btn{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:2px 8px;}
 
+/* DIET */
+.diet-day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;box-shadow:var(--shadow);}
+.diet-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.diet-row:last-child{border-bottom:none;padding-bottom:0;}
+.diet-row-time{color:var(--gold);font-weight:700;min-width:42px;font-size:11px;padding-top:1px;}
+.diet-row-body{flex:1;}
+.diet-row-name{font-weight:600;margin-bottom:3px;font-size:13px;color:var(--text);}
+.diet-row-desc{color:var(--muted2);font-size:12px;line-height:1.7;}
+.diet-tip{background:var(--rose-light);border:1px solid var(--border2);border-radius:var(--rs);padding:12px 14px;font-size:12px;color:var(--rose);line-height:1.7;margin-bottom:14px;box-shadow:var(--shadow);}
+
 /* DASHBOARD */
-.dash-hero{background:linear-gradient(145deg,#1E1710,#241A0E);border:1px solid #4A3A28;border-radius:24px;padding:22px;margin-bottom:14px;text-align:center;box-shadow:0 8px 40px var(--gold-g);}
+.dash-hero{background:linear-gradient(145deg,#FFF0F4,#FFF8EE);border:1px solid var(--border2);border-radius:24px;padding:24px;margin-bottom:14px;text-align:center;box-shadow:var(--shadow-lg);}
 .dash-hero-num{font-size:58px;font-weight:900;letter-spacing:-3px;line-height:1;color:var(--sage);}
 .dash-hero-lbl{font-size:13px;color:var(--muted2);margin-top:6px;}
 .dash-rings{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px;}
-.ring-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:16px 10px;text-align:center;}
+.ring-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px 10px;text-align:center;box-shadow:var(--shadow);}
 .ring-card svg{width:72px;height:72px;}
 .ring-lbl{font-size:11px;color:var(--muted2);margin-top:6px;font-weight:600;}
-.water-bars-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;}
+.water-bars-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:14px;box-shadow:var(--shadow);}
 .water-bars-title{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;}
 .water-bars{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:80px;}
 .water-bar-col{display:flex;flex-direction:column;align-items:center;gap:5px;height:100%;}
@@ -144,48 +155,37 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .wday-name{font-size:9px;color:var(--muted);margin-bottom:5px;font-weight:600;}
 .wday-circle{width:34px;height:34px;border-radius:50%;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid var(--border);transition:all .3s;}
 
-/* DIET TAB */
-.diet-day-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:12px;}
-.diet-row{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
-.diet-row:last-child{border-bottom:none;padding-bottom:0;}
-.diet-row-time{color:var(--gold);font-weight:700;min-width:42px;font-size:11px;padding-top:1px;}
-.diet-row-body{flex:1;}
-.diet-row-name{font-weight:600;margin-bottom:3px;font-size:13px;}
-.diet-row-desc{color:var(--muted2);font-size:12px;line-height:1.7;}
-.diet-tip{background:var(--rose-d);border:1px solid var(--rose-g);border-radius:var(--rx);padding:10px 14px;font-size:12px;color:var(--rose);line-height:1.6;margin-top:10px;}
-
 /* TABS */
 .tab{display:none;}
 .tab.on{display:block;animation:fadeSlide .22s ease;}
 @keyframes fadeSlide{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
 
 /* GLASSMORPHISM NAV */
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(18,14,11,.82);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border-top:1px solid rgba(212,175,122,.12);display:flex;padding:10px 8px 24px;z-index:200;gap:4px;}
-.nav-it{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 4px 4px;border-radius:18px;transition:all .2s;position:relative;}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(250,245,238,.88);backdrop-filter:blur(28px) saturate(180%);-webkit-backdrop-filter:blur(28px) saturate(180%);border-top:1px solid var(--border2);display:flex;padding:10px 8px 24px;z-index:200;gap:4px;box-shadow:0 -4px 24px rgba(120,80,40,.08);}
+.nav-it{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:8px 4px 4px;border-radius:18px;transition:all .2s;}
 .nav-it:active{transform:scale(.92);}
-.nav-it.active{background:rgba(212,175,122,.10);}
+.nav-it.active{background:var(--rose-light);}
 .nav-ic{font-size:21px;transition:transform .2s cubic-bezier(.34,1.56,.64,1);line-height:1;}
 .nav-it.active .nav-ic{transform:translateY(-1px) scale(1.1);}
 .nav-lb{font-size:9px;color:var(--muted2);font-weight:700;letter-spacing:.03em;transition:color .2s;}
-.nav-it.active .nav-lb{color:var(--gold);}
+.nav-it.active .nav-lb{color:var(--rose);}
 .nav-dot{width:4px;height:4px;border-radius:50%;background:var(--rose);margin:0 auto;opacity:0;transform:scale(0);transition:all .25s cubic-bezier(.34,1.56,.64,1);}
 .nav-it.active .nav-dot{opacity:1;transform:scale(1);}
 
 /* MISC */
-.reset-btn{width:100%;background:rgba(180,60,60,.08);border:1px solid rgba(180,60,60,.2);color:#c87878;border-radius:var(--rs);padding:13px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px;}
-.progress-bar-wrap{height:8px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:6px;}
-.progress-bar-fill{height:100%;border-radius:99px;transition:width .6s cubic-bezier(.34,1.56,.64,1);}
+.reset-btn{width:100%;background:var(--bg2);border:1px solid var(--border2);color:var(--muted2);border-radius:var(--rs);padding:13px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:4px;}
+.reset-btn:active{background:var(--border);}
+.info-card{background:var(--rose-light);border:1px solid var(--border2);border-radius:var(--rs);padding:12px 14px;font-size:12px;color:var(--rose);line-height:1.7;margin-bottom:14px;}
+.tag-gold{background:var(--gold-light);color:var(--gold);border:1px solid var(--border2);border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;display:inline-block;}
+.tag-sage{background:var(--sage-light);color:var(--sage);border:1px solid #C0D8C4;border-radius:6px;padding:2px 8px;font-size:10px;font-weight:700;display:inline-block;}
 ::-webkit-scrollbar{width:0;}
-
-/* ORNAMENT */
-.ornament{position:absolute;opacity:.06;pointer-events:none;font-size:120px;right:-10px;top:-20px;}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="hrow">
-    <div><div class="greeting" id="greeting">Olá, Andressa 🌸</div><div class="date-sub" id="dateSub"></div></div>
+    <div><div class="greeting">Olá, <span>Andressa</span> 🌸</div><div class="date-sub" id="dateSub"></div></div>
     <div class="streak-pill">🌸 <span id="streakNum">0</span> dias</div>
   </div>
 </div>
@@ -194,33 +194,32 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 <div class="tab on" id="tab-hoje">
   <div class="sec">
     <div class="spacer"></div>
-
     <div class="hero-today">
       <div class="hero-title-row">
-        <div class="hero-title">Seu dia de hoje</div>
+        <div class="hero-title">Seu progresso hoje</div>
         <div class="hero-date" id="heroDate"></div>
       </div>
       <div class="hero-rings">
         <div class="hero-ring-item">
-          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#3D3228" stroke-width="8"/><circle id="hrEx" cx="40" cy="40" r="32" fill="none" stroke="#8FAF96" stroke-width="8" stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .7s cubic-bezier(.34,1.2,.64,1)"/><text x="40" y="45" text-anchor="middle" font-size="14" font-weight="800" fill="#F5E6D0" id="hrExTxt">0%</text></svg>
+          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#E8D5C0" stroke-width="8"/><circle id="hrEx" cx="40" cy="40" r="32" fill="none" stroke="#4A7D5A" stroke-width="8" stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .7s cubic-bezier(.34,1.2,.64,1)"/><text x="40" y="45" text-anchor="middle" font-size="14" font-weight="800" fill="#2C1A0C" id="hrExTxt">0%</text></svg>
           <div class="hero-ring-lbl">Exercícios</div>
         </div>
         <div class="hero-ring-item">
-          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#3D3228" stroke-width="8"/><circle id="hrWater" cx="40" cy="40" r="32" fill="none" stroke="#D4AF7A" stroke-width="8" stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .7s cubic-bezier(.34,1.2,.64,1)"/><text x="40" y="45" text-anchor="middle" font-size="14" font-weight="800" fill="#F5E6D0" id="hrWaterTxt">0%</text></svg>
+          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#E8D5C0" stroke-width="8"/><circle id="hrWater" cx="40" cy="40" r="32" fill="none" stroke="#B8862A" stroke-width="8" stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .7s cubic-bezier(.34,1.2,.64,1)"/><text x="40" y="45" text-anchor="middle" font-size="14" font-weight="800" fill="#2C1A0C" id="hrWaterTxt">0%</text></svg>
           <div class="hero-ring-lbl">Água</div>
         </div>
         <div class="hero-ring-item">
-          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#3D3228" stroke-width="8"/><circle id="hrDiet" cx="40" cy="40" r="32" fill="none" stroke="#C97B8A" stroke-width="8" stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .7s cubic-bezier(.34,1.2,.64,1)"/><text x="40" y="45" text-anchor="middle" font-size="14" font-weight="800" fill="#F5E6D0" id="hrDietTxt">0%</text></svg>
+          <svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="32" fill="none" stroke="#E8D5C0" stroke-width="8"/><circle id="hrDiet" cx="40" cy="40" r="32" fill="none" stroke="#B05472" stroke-width="8" stroke-linecap="round" stroke-dasharray="201.1" stroke-dashoffset="201.1" transform="rotate(-90 40 40)" style="transition:stroke-dashoffset .7s cubic-bezier(.34,1.2,.64,1)"/><text x="40" y="45" text-anchor="middle" font-size="14" font-weight="800" fill="#2C1A0C" id="hrDietTxt">0%</text></svg>
           <div class="hero-ring-lbl">Dieta</div>
         </div>
       </div>
       <div class="hero-stats">
         <div class="hero-stat">
-          <div class="hero-stat-icon" style="background:var(--rose-d);">📏</div>
+          <div class="hero-stat-icon" style="background:var(--rose-light)">📏</div>
           <div><div class="hero-stat-val" id="heroWaist" style="color:var(--rose)">—</div><div class="hero-stat-lbl">Cintura (cm)</div></div>
         </div>
         <div class="hero-stat">
-          <div class="hero-stat-icon" style="background:var(--gold-d);">💧</div>
+          <div class="hero-stat-icon" style="background:var(--gold-light)">💧</div>
           <div><div class="hero-stat-val" id="heroWaterL" style="color:var(--gold)">0.0L</div><div class="hero-stat-lbl">Água / 2.5L</div></div>
         </div>
       </div>
@@ -263,30 +262,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 <div class="tab" id="tab-ex">
   <div class="sec">
     <div class="spacer"></div>
-    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px;background:linear-gradient(135deg,var(--beige),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Exercícios</div>
-    <div style="font-size:13px;color:var(--muted2);margin-bottom:16px">Programa para recuperação da diástase · 4x/semana</div>
-
-    <div class="card" style="background:var(--rose-d);border-color:var(--rose-g);">
-      <div style="font-size:12px;color:var(--rose);line-height:1.7;font-weight:500">🌸 <strong>Sobre a diástase:</strong> os exercícios abaixo fortalecem o transverso abdominal sem aumentar a pressão intra-abdominal. Evite abdominais tradicionais (crunch) e exercícios de impacto alto até melhora.</div>
-    </div>
-
+    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px;color:var(--text)">Exercícios 🌸</div>
+    <div style="font-size:13px;color:var(--muted2);margin-bottom:16px">Recuperação da diástase · 4x por semana</div>
+    <div class="info-card">🌿 <strong>Importante:</strong> Estes exercícios ativam o transverso abdominal sem aumentar pressão intra-abdominal. Evite abdominais tradicionais e impacto alto até melhora confirmada.</div>
     <div id="exCardsDetail"></div>
-
     <div class="sec-lbl">Frequência semanal</div>
     <div class="card">
-      <div style="font-size:13px;color:var(--text2);line-height:2.2">
-        <div>🌸 <strong style="color:var(--gold)">Seg / Qua / Sex / Sáb</strong> — treino completo (4 exercícios)</div>
-        <div>😴 <strong style="color:var(--muted2)">Ter / Qui / Dom</strong> — descanso ativo (caminhada leve)</div>
-        <div style="margin-top:10px;font-size:12px;color:var(--muted2)">Duração estimada por sessão: 20–30 minutos</div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px"><span class="tag-gold">Seg · Qua · Sex · Sáb</span><span style="font-size:13px;color:var(--text2);font-weight:600">Treino completo (4 exercícios)</span></div>
+        <div style="display:flex;align-items:center;gap:10px"><span class="tag-sage">Ter · Qui · Dom</span><span style="font-size:13px;color:var(--muted2)">Descanso ativo — caminhada leve</span></div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:4px;padding-top:10px;border-top:1px solid var(--border)">⏱️ Duração estimada: 20–30 minutos por sessão</div>
       </div>
     </div>
-
     <div class="sec-lbl">Respiração correta</div>
     <div class="card">
-      <div style="font-size:13px;color:var(--text2);line-height:2">
-        <div>🫁 <strong style="color:var(--rose)">Expirar</strong> no esforço (na fase de contração)</div>
-        <div>🫁 <strong style="color:var(--beige2)">Inspirar</strong> na fase de retorno</div>
-        <div style="font-size:12px;color:var(--muted2);margin-top:8px">Respire com o diafragma, nunca prenda o ar. A respiração correta é parte do exercício.</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="font-size:13px;color:var(--text2)">🫁 <strong style="color:var(--rose)">Expirar</strong> no momento do esforço (contração)</div>
+        <div style="font-size:13px;color:var(--text2)">🫁 <strong style="color:var(--beige)">Inspirar</strong> na fase de retorno (relaxamento)</div>
+        <div style="font-size:12px;color:var(--muted2);margin-top:4px;padding-top:10px;border-top:1px solid var(--border)">A respiração com diafragma é parte do exercício — nunca prenda o ar.</div>
       </div>
     </div>
     <div class="spacer"></div>
@@ -297,41 +290,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 <div class="tab" id="tab-dieta">
   <div class="sec">
     <div class="spacer"></div>
-    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px;background:linear-gradient(135deg,var(--beige),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Dieta</div>
+    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px;color:var(--text)">Dieta 🍽️</div>
     <div style="font-size:13px;color:var(--muted2);margin-bottom:16px">Simples · ingredientes fáceis na China · anti-inflamatório</div>
-
-    <div class="diet-tip">🌿 <strong>Foco da dieta:</strong> colágeno, vitamina C, zinco e ômega-3 aceleram a recuperação do tecido conjuntivo da diástase. Evite açúcar refinado, frituras e excesso de sódio — inflamam o tecido.</div>
-
-    <div style="height:14px"></div>
+    <div class="diet-tip">🌿 <strong>Foco:</strong> colágeno, vitamina C, zinco e ômega-3 aceleram a recuperação do tecido conjuntivo. Evite açúcar refinado, frituras e excesso de sódio.</div>
     <div id="dietCards"></div>
     <div class="spacer"></div>
   </div>
 </div>
 
-<!-- CORPO -->
+<!-- MEDIDAS -->
 <div class="tab" id="tab-corpo">
   <div class="sec">
     <div class="spacer"></div>
-    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px;background:linear-gradient(135deg,var(--beige),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Medidas</div>
+    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px;color:var(--text)">Medidas 📏</div>
     <div style="font-size:13px;color:var(--muted2);margin-bottom:16px">Acompanhe a evolução da diástase</div>
-
     <div class="sec-lbl">Registrar medidas</div>
     <div class="card">
       <div class="corpo-grid">
         <div class="inp-block"><label>Cintura (cm)</label><input type="number" id="inCintura" placeholder="80" step="0.5"></div>
         <div class="inp-block"><label>Peso (kg)</label><input type="number" id="inPeso" placeholder="67" step="0.1"></div>
         <div class="inp-block"><label>Quadril (cm)</label><input type="number" id="inQuadril" placeholder="95" step="0.5"></div>
-        <div class="inp-block"><label>Distância diástase (cm)</label><input type="number" id="inDiastase" placeholder="3.0" step="0.1"></div>
+        <div class="inp-block"><label>Diástase (cm)</label><input type="number" id="inDiastase" placeholder="3.0" step="0.1"></div>
       </div>
       <button class="save-btn gold" onclick="saveBodyEntry()">✨ Salvar medidas</button>
     </div>
-
     <div class="sec-lbl">Última medição</div>
     <div id="latestBody" class="card" style="color:var(--muted2);font-size:13px;text-align:center;padding:20px">Nenhum registro ainda</div>
-
     <div class="sec-lbl">Evolução da cintura</div>
-    <div class="card" style="padding:14px"><div class="chart-wrap"><canvas id="waistChart"></canvas></div></div>
-
+    <div class="card" style="padding:14px"><div class="chart-wrap" id="waistWrap"><canvas id="waistChart"></canvas></div></div>
     <div class="sec-lbl">Histórico</div>
     <div class="card" id="bodyHistory" style="color:var(--muted2);font-size:13px;text-align:center;padding:20px">Nenhum registro ainda</div>
     <div class="spacer"></div>
@@ -342,12 +328,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 <div class="tab" id="tab-dash">
   <div class="sec">
     <div class="spacer"></div>
-    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:16px;background:linear-gradient(135deg,var(--beige),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Dashboard</div>
+    <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:16px;color:var(--text)">Dashboard ✨</div>
     <div class="dash-hero"><div class="dash-hero-num" id="dashDelta">— cm</div><div class="dash-hero-lbl">redução de cintura desde o início</div></div>
     <div class="dash-rings">
-      <div class="ring-card"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" fill="none" stroke="#3D3228" stroke-width="7"/><circle id="ringEx" cx="35" cy="35" r="28" fill="none" stroke="#8FAF96" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 35 35)" style="transition:stroke-dashoffset .7s ease"/><text x="35" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="#F5E6D0" id="ringExTxt">0%</text></svg><div class="ring-lbl">Exercícios</div></div>
-      <div class="ring-card"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" fill="none" stroke="#3D3228" stroke-width="7"/><circle id="ringWater" cx="35" cy="35" r="28" fill="none" stroke="#D4AF7A" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 35 35)" style="transition:stroke-dashoffset .7s ease"/><text x="35" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="#F5E6D0" id="ringWaterTxt">0%</text></svg><div class="ring-lbl">Água</div></div>
-      <div class="ring-card"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" fill="none" stroke="#3D3228" stroke-width="7"/><circle id="ringDiet" cx="35" cy="35" r="28" fill="none" stroke="#C97B8A" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 35 35)" style="transition:stroke-dashoffset .7s ease"/><text x="35" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="#F5E6D0" id="ringDietTxt">0%</text></svg><div class="ring-lbl">Dieta</div></div>
+      <div class="ring-card"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" fill="none" stroke="#E8D5C0" stroke-width="7"/><circle id="ringEx" cx="35" cy="35" r="28" fill="none" stroke="#4A7D5A" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 35 35)" style="transition:stroke-dashoffset .7s ease"/><text x="35" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="#2C1A0C" id="ringExTxt">0%</text></svg><div class="ring-lbl">Exercícios</div></div>
+      <div class="ring-card"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" fill="none" stroke="#E8D5C0" stroke-width="7"/><circle id="ringWater" cx="35" cy="35" r="28" fill="none" stroke="#B8862A" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 35 35)" style="transition:stroke-dashoffset .7s ease"/><text x="35" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="#2C1A0C" id="ringWaterTxt">0%</text></svg><div class="ring-lbl">Água</div></div>
+      <div class="ring-card"><svg viewBox="0 0 70 70"><circle cx="35" cy="35" r="28" fill="none" stroke="#E8D5C0" stroke-width="7"/><circle id="ringDiet" cx="35" cy="35" r="28" fill="none" stroke="#B05472" stroke-width="7" stroke-linecap="round" stroke-dasharray="175.9" stroke-dashoffset="175.9" transform="rotate(-90 35 35)" style="transition:stroke-dashoffset .7s ease"/><text x="35" y="40" text-anchor="middle" font-size="13" font-weight="800" fill="#2C1A0C" id="ringDietTxt">0%</text></svg><div class="ring-lbl">Dieta</div></div>
     </div>
     <div class="water-bars-wrap"><div class="water-bars-title">💧 Água — últimos 7 dias</div><div class="water-bars" id="waterBars"></div></div>
     <div class="sec-lbl">Semana</div>
@@ -367,32 +353,27 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 
 <script>
 const EXERCISES=[
-  {id:'e1',name:'Reverse Plank',sets:'3x15 repetições',note:'Core + glúteo · sem pressão abdominal',color:'#C97B8A'},
-  {id:'e2',name:'Dead Bug Unilateral',sets:'3x10 cada lado',note:'Transverso abdominal · respiração controlada',color:'#D4AF7A'},
-  {id:'e3',name:'Hip Bridge + Joelho',sets:'3x20 repetições',note:'Glúteo + estabilização pélvica',color:'#8FAF96'},
-  {id:'e4',name:'Prancha Isométrica',sets:'3x máximo que conseguir',note:'Estabilização global · progredir gradualmente',color:'#D4AF7A'},
+  {id:'e1',name:'Reverse Plank',sets:'3x15 repetições',note:'Core + glúteo sem pressão abdominal',icon:'🏋️',color:'#B05472',bg:'var(--rose-light)'},
+  {id:'e2',name:'Dead Bug Unilateral',sets:'3x10 cada lado',note:'Transverso abdominal · respiração controlada',icon:'🦵',color:'#B8862A',bg:'var(--gold-light)'},
+  {id:'e3',name:'Hip Bridge + Joelho',sets:'3x20 repetições',note:'Glúteo + estabilização pélvica',icon:'🍑',color:'#4A7D5A',bg:'var(--sage-light)'},
+  {id:'e4',name:'Prancha Isométrica',sets:'3x máximo que conseguir',note:'Estabilização global · progresso gradual',icon:'🧘',color:'#B8862A',bg:'var(--gold-light)'},
 ];
-
 const MEALS=[
   {id:'m1',t:'7h00',n:'Café da manhã',d:'2 ovos mexidos • 1 fatia pão integral • 1 maçã • chá verde'},
-  {id:'m2',t:'10h00',n:'Lanche manhã',d:'1 iogurte natural • pitaya ou maçã'},
-  {id:'m3',t:'12h30',n:'Almoço',d:'200g frango grelhado • 150g arroz • legumes à vontade (brócolis, couve)'},
-  {id:'m4',t:'15h30',n:'Lanche tarde',d:'Punhado de castanhas ou ovos cozidos (2)'},
-  {id:'m5',t:'19h00',n:'Jantar',d:'Sopa de legumes com frango ou tofu • ou 200g peixe + vegetais'},
-  {id:'m6',t:'21h30',n:'Antes dormir (opcional)',d:'1 copo leite morno ou 1 iogurte'},
+  {id:'m2',t:'10h00',n:'Lanche manhã',d:'1 iogurte natural • pitaya ou kiwi'},
+  {id:'m3',t:'12h30',n:'Almoço',d:'200g frango grelhado • 150g arroz • legumes à vontade'},
+  {id:'m4',t:'15h30',n:'Lanche tarde',d:'Punhado de castanhas • ou 2 ovos cozidos'},
+  {id:'m5',t:'19h00',n:'Jantar',d:'Sopa de legumes com frango • ou peixe + vegetais'},
+  {id:'m6',t:'21h30',n:'Antes de dormir',d:'1 iogurte grego • ou leite morno (opcional)'},
 ];
-
-const DIET_PLAN=[
-  {day:'Diariamente',meals:[
-    {t:'7h00',n:'Café da manhã',d:'2 ovos (mexidos ou cozidos) • 1 fatia de pão integral • 1 fruta (maçã, kiwi ou pitaya) • chá verde sem açúcar'},
-    {t:'10h00',n:'Lanche da manhã',d:'1 iogurte natural sem açúcar • 1 fruta • ou punhado de castanhas'},
-    {t:'12h30',n:'Almoço',d:'200g frango grelhado ou tofu • 150g arroz • legumes à vontade (brócolis, couve, cenoura) • 1 fio de azeite'},
-    {t:'15h30',n:'Lanche da tarde',d:'2 ovos cozidos • ou castanhas • ou 1 maçã com pasta de amendoim'},
-    {t:'19h00',n:'Jantar',d:'Sopa leve: frango + legumes + caldo natural • ou peixe grelhado + vegetais refogados • sem arroz à noite'},
-    {t:'21h30',n:'Opcional',d:'1 copo leite morno • ou iogurte grego com mel'},
-  ]},
+const DIET_DATA=[
+  {t:'7h00',n:'Café da manhã',d:'2 ovos (mexidos ou cozidos) • 1 fatia pão integral • 1 fruta (maçã/kiwi/pitaya) • chá verde sem açúcar'},
+  {t:'10h00',n:'Lanche manhã',d:'1 iogurte natural sem açúcar • 1 fruta • ou castanhas'},
+  {t:'12h30',n:'Almoço',d:'200g frango grelhado ou tofu • 150g arroz • legumes à vontade (brócolis, couve, cenoura) • 1 fio de azeite'},
+  {t:'15h30',n:'Lanche tarde',d:'2 ovos cozidos • ou castanhas • ou maçã com pasta de amendoim'},
+  {t:'19h00',n:'Jantar',d:'Sopa leve: frango + legumes + caldo natural • ou peixe grelhado + vegetais refogados · sem arroz à noite'},
+  {t:'21h30',n:'Opcional',d:'1 copo leite morno • ou iogurte grego com mel'},
 ];
-
 function todayKey(){return new Date().toISOString().split('T')[0];}
 function loadState(){const r=localStorage.getItem('andressa_day_'+todayKey());return r?JSON.parse(r):{water:0,meals:{},exercises:{},diary:{}};}
 function saveState(){localStorage.setItem('andressa_day_'+todayKey(),JSON.stringify(ST));}
@@ -404,10 +385,7 @@ function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m
 function fmtDateS(d){if(!d)return'';const[,m,day]=d.split('-');return`${day}/${m}`;}
 let ST=loadState(),GL=loadGlobal(),wChart=null;
 
-function setRingHero(id,pct,txtId){
-  const el=document.getElementById(id);if(el)el.style.strokeDashoffset=Math.max(0,201.1-(pct/100)*201.1);
-  const tx=document.getElementById(txtId);if(tx)tx.textContent=pct+'%';
-}
+function setRingHero(id,pct,txtId){const el=document.getElementById(id);if(el)el.style.strokeDashoffset=Math.max(0,201.1-(pct/100)*201.1);const tx=document.getElementById(txtId);if(tx)tx.textContent=pct+'%';}
 function setRing(id,pct){const el=document.getElementById(id);if(el)el.style.strokeDashoffset=Math.max(0,175.9-(pct/100)*175.9);}
 
 function renderHero(){
@@ -419,16 +397,14 @@ function renderHero(){
   const hw=document.getElementById('heroWaist');if(hw)hw.textContent=ST.diary&&ST.diary.waist?ST.diary.waist+'cm':'—';
   const hl=document.getElementById('heroWaterL');if(hl)hl.textContent=(ST.water/1000).toFixed(1)+'L';
 }
-
 function renderHeader(){
   const h=new Date().getHours();
-  document.getElementById('greeting').textContent=(h<12?'Bom dia':h<18?'Boa tarde':'Boa noite')+', Andressa 🌸';
+  const g=document.getElementById('greeting');if(g)g.innerHTML=(h<12?'Bom dia, ':'Boa '+(h<18?'tarde':'noite')+', ')+'<span>Andressa</span> 🌸';
   const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'],months=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'],n=new Date();
-  document.getElementById('dateSub').textContent=days[n.getDay()]+', '+n.getDate()+' '+months[n.getMonth()];
+  const ds=document.getElementById('dateSub');if(ds)ds.textContent=days[n.getDay()]+', '+n.getDate()+' de '+months[n.getMonth()];
   const hd=document.getElementById('heroDate');if(hd)hd.textContent=n.getDate()+'/'+String(n.getMonth()+1).padStart(2,'0');
   document.getElementById('streakNum').textContent=GL.streak||0;
 }
-
 function renderWater(){
   document.getElementById('waterLit').textContent=(ST.water/1000).toFixed(1)+'L';
   document.getElementById('waterFill').style.width=Math.min((ST.water/2500)*100,100)+'%';
@@ -436,11 +412,9 @@ function renderWater(){
 }
 function addWater(ml){ST.water=Math.min(ST.water+ml,5000);saveState();renderWater();checkDone();}
 function resetWater(){ST.water=0;saveState();renderWater();}
-
 function saveDiary(){
   const w=document.getElementById('dWaist').value,p=document.getElementById('dWeight').value;
-  ST.diary={waist:w?parseFloat(w):null,weight:p?parseFloat(p):null,savedAt:todayKey()};
-  saveState();
+  ST.diary={waist:w?parseFloat(w):null,weight:p?parseFloat(p):null,savedAt:todayKey()};saveState();
   if(w||p){const data=loadBody();const idx=data.findIndex(d=>d.date===todayKey());const entry={date:todayKey(),cintura:w?parseFloat(w):null,weight:p?parseFloat(p):null};if(idx>=0)data[idx]={...data[idx],...Object.fromEntries(Object.entries(entry).filter(([,v])=>v!==null))};else data.push(entry);saveBody(data);}
   renderDiary();renderHero();
 }
@@ -452,60 +426,41 @@ function renderDiary(){
   chips+=`<div class="d-chip">💧 <span>${(ST.water/1000).toFixed(1)}L</span></div>`;
   document.getElementById('diarySaved').innerHTML=chips;
 }
-
-function renderExercises(container,withDetail){
-  const el=document.getElementById(container);
-  if(!el)return;
+function renderExercises(containerId){
+  const el=document.getElementById(containerId);if(!el)return;
   el.innerHTML=EXERCISES.map(e=>{
     const done=ST.exercises[e.id];
-    return`<div class="ex-card ${done?'done':''}" id="excard_${e.id}">
-      <div class="ex-img-wrap" onclick="toggleEx('${e.id}')">
-        <div style="width:100%;height:100%;background:linear-gradient(135deg,${e.color}25,${e.color}08);display:flex;align-items:center;justify-content:center;">
-          <div style="text-align:center;padding:20px">
-            <div style="font-size:48px;margin-bottom:8px">${e.id==='e1'?'🏋️':e.id==='e2'?'🦵':e.id==='e3'?'🍑':'🧘'}</div>
-            <div style="font-size:14px;font-weight:800;color:#F5E6D0;">${e.name}</div>
-          </div>
+    return`<div class="ex-card ${done?'done':''}" onclick="toggleEx('${e.id}')">
+      <div class="ex-header">
+        <div class="ex-icon" style="background:${e.bg}">${e.icon}</div>
+        <div class="ex-info">
+          <div class="ex-name">${e.name}</div>
+          <div><span class="ex-sets">${e.sets}</span></div>
+          <div class="ex-note">${e.note}</div>
         </div>
-        <div class="ex-done-overlay"><div class="ex-done-check">✓</div></div>
-        <div class="ex-img-overlay">
-          <div class="ex-title">${e.name}</div>
-          <div class="ex-sets-pill">${e.sets}</div>
-        </div>
+        <div class="ex-chk-wrap" style="${!done?'border-color:'+e.color+';color:'+e.color:''}">${done?'✓':''}</div>
       </div>
-      <div class="ex-footer">
-        <div class="ex-note">${e.note}</div>
-        <button class="ex-chk-btn" onclick="toggleEx('${e.id}')">${done?'✓ Feito':'Marcar'}</button>
-      </div>
+      <div class="ex-divider"></div>
+      <div class="ex-tip">${done?'✅ Concluído! Ótimo trabalho 🌸':'Toque para marcar como concluído'}</div>
     </div>`;
   }).join('');
 }
-
-function toggleEx(id){
-  ST.exercises[id]=!ST.exercises[id];saveState();
-  renderExercises('exCards');renderExercises('exCardsDetail');
-  renderHero();checkDone();
-}
-
+function toggleEx(id){ST.exercises[id]=!ST.exercises[id];saveState();renderExercises('exCards');renderExercises('exCardsDetail');renderHero();checkDone();}
 function renderMeals(){
   document.getElementById('mealsCard').innerHTML=MEALS.map(m=>`<div class="meal ${ST.meals[m.id]?'done':''}" onclick="toggleMeal('${m.id}')"><div class="meal-t">${m.t}</div><div class="meal-body"><div class="meal-n">${m.n}</div><div class="meal-d">${m.d}</div></div><div class="meal-chk">${ST.meals[m.id]?'✓':''}</div></div>`).join('');
 }
 function toggleMeal(id){ST.meals[id]=!ST.meals[id];saveState();renderMeals();checkDone();}
-
 function renderDiet(){
-  document.getElementById('dietCards').innerHTML=DIET_PLAN.map(dp=>`<div class="diet-day-card"><div style="font-size:12px;font-weight:700;color:var(--gold);margin-bottom:10px;text-transform:uppercase;letter-spacing:.1em">${dp.day}</div>${dp.meals.map(m=>`<div class="diet-row"><div class="diet-row-time">${m.t}</div><div class="diet-row-body"><div class="diet-row-name">${m.n}</div><div class="diet-row-desc">${m.d.split(' • ').join('<br>')}</div></div></div>`).join('')}</div>`).join('')+
-  `<div class="diet-day-card">
-    <div style="font-size:12px;font-weight:700;color:var(--rose);margin-bottom:10px">🌿 Ingredientes fáceis na China</div>
-    <div style="font-size:13px;color:var(--text2);line-height:2.2">
-      ✓ Ovos (鸡蛋) · Frango (鸡肉) · Tofu (豆腐)<br>
-      ✓ Arroz (大米) · Brócolis (西兰花) · Cenoura (胡萝卜)<br>
-      ✓ Maçã (苹果) · Iogurte natural (原味酸奶)<br>
-      ✓ Chá verde (绿茶) · Castanhas (坚果) · Azeite (橄榄油)<br>
-      ✓ Pitaya (火龙果) · Pão integral (全麦面包)
-    </div>
+  document.getElementById('dietCards').innerHTML=`<div class="diet-day-card">${DIET_DATA.map(m=>`<div class="diet-row"><div class="diet-row-time">${m.t}</div><div class="diet-row-body"><div class="diet-row-name">${m.n}</div><div class="diet-row-desc">${m.d.split(' • ').join('<br>')}</div></div></div>`).join('')}</div>
+  <div class="diet-day-card">
+    <div style="font-size:12px;font-weight:700;color:var(--rose);margin-bottom:10px">🛒 Ingredientes na China</div>
+    <div style="font-size:13px;color:var(--text2);line-height:2.3">✓ Ovos 鸡蛋 · Frango 鸡肉 · Tofu 豆腐<br>✓ Arroz 大米 · Brócolis 西兰花 · Cenoura 胡萝卜<br>✓ Maçã 苹果 · Iogurte 原味酸奶 · Chá verde 绿茶<br>✓ Castanhas 坚果 · Azeite 橄榄油 · Pitaya 火龙果</div>
   </div>
-  <div class="diet-tip">💊 <strong>Suplementos úteis:</strong> colágeno hidrolisado (10g manhã) + vitamina C 500mg + ômega-3 2g. Disponíveis na Hema ou Sam's Club em Dongguan.</div>`;
+  <div class="diet-day-card" style="background:var(--sage-light);border-color:#C0D8C4">
+    <div style="font-size:12px;font-weight:700;color:var(--sage);margin-bottom:8px">💊 Suplementos recomendados</div>
+    <div style="font-size:13px;color:var(--text2);line-height:2.2">🌿 Colágeno hidrolisado 10g — manhã em jejum<br>🍊 Vitamina C 500mg — junto com o colágeno<br>🐟 Ômega-3 2g — almoço<br><span style="font-size:11px;color:var(--muted2)">Disponíveis na Hema ou Sam's Club, Dongguan</span></div>
+  </div>`;
 }
-
 function saveBodyEntry(){
   const c=document.getElementById('inCintura').value,p=document.getElementById('inPeso').value,q=document.getElementById('inQuadril').value,d=document.getElementById('inDiastase').value;
   if(!c&&!p&&!q&&!d){alert('Preencha pelo menos um campo.');return;}
@@ -515,58 +470,49 @@ function saveBodyEntry(){
   saveBody(data);['inCintura','inPeso','inQuadril','inDiastase'].forEach(i=>document.getElementById(i).value='');
   renderCorpo();renderDashboard();
 }
-
 function renderCorpo(){
   const data=loadBody();
   if(data.length>0){
     const last=data[data.length-1];
     let delta='';
-    if(data.length>1){const first=data.find(d=>d.cintura),l=[...data].reverse().find(d=>d.cintura);if(first&&l&&first!==l){const diff=(l.cintura-first.cintura).toFixed(1),col=parseFloat(diff)<0?'var(--sage)':'var(--rose)';delta=`<div style="text-align:center;margin-top:8px;font-size:12px;color:var(--muted2)">Variação cintura: <strong style="color:${col}">${parseFloat(diff)>0?'+':''}${diff}cm</strong></div>`;}}
-    document.getElementById('latestBody').innerHTML=`<div style="font-size:11px;color:var(--muted2);margin-bottom:10px;text-align:center">${fmtDate(last.date)}</div><div class="latest-card"><div class="latest-block"><div class="latest-num" style="color:var(--rose)">${last.cintura||'—'}</div><div class="latest-lbl">Cintura (cm)</div></div><div class="latest-block"><div class="latest-num" style="color:var(--gold)">${last.weight||'—'}</div><div class="latest-lbl">Peso (kg)</div></div></div>${last.diastase?`<div style="text-align:center;margin-top:10px;padding:10px;background:var(--rose-d);border-radius:12px;border:1px solid var(--rose-g)"><div style="font-size:11px;color:var(--rose);font-weight:700;text-transform:uppercase;letter-spacing:.1em">Diástase</div><div style="font-size:28px;font-weight:900;color:var(--rose);margin-top:4px">${last.diastase}cm</div></div>`:''} ${delta}`;
+    if(data.length>1){const first=data.find(d=>d.cintura),l=[...data].reverse().find(d=>d.cintura);if(first&&l&&first!==l){const diff=(l.cintura-first.cintura).toFixed(1);const col=parseFloat(diff)<0?'var(--sage)':'var(--rose)';delta=`<div style="text-align:center;margin-top:10px;font-size:12px;color:var(--muted2)">Variação: <strong style="color:${col}">${parseFloat(diff)>0?'+':''}${diff}cm</strong></div>`;}}
+    document.getElementById('latestBody').innerHTML=`<div style="font-size:11px;color:var(--muted2);margin-bottom:12px;text-align:center">${fmtDate(last.date)}</div><div class="latest-card"><div class="latest-block"><div class="latest-num" style="color:var(--rose)">${last.cintura||'—'}</div><div class="latest-lbl">Cintura (cm)</div></div><div class="latest-block"><div class="latest-num" style="color:var(--gold)">${last.weight||'—'}</div><div class="latest-lbl">Peso (kg)</div></div></div>${last.diastase?`<div style="margin-top:10px;padding:12px;background:var(--rose-light);border-radius:12px;border:1px solid var(--border2);text-align:center"><div style="font-size:10px;color:var(--rose);font-weight:700;text-transform:uppercase;letter-spacing:.1em">Distância Diástase</div><div style="font-size:28px;font-weight:900;color:var(--rose);margin-top:4px">${last.diastase} cm</div></div>`:''} ${delta}`;
   }
   if(wChart){wChart.destroy();wChart=null;}
-  const wrap=document.getElementById('waistChart').parentElement;
-  if(data.filter(d=>d.cintura).length<2){wrap.innerHTML='<div class="empty-chart">📉 Registre 2+ medições<br>para ver a evolução da cintura</div>';}
+  const wrap=document.getElementById('waistWrap');
+  if(data.filter(d=>d.cintura).length<2){wrap.innerHTML='<div class="empty-chart">📉 Registre 2+ medições<br>para ver a evolução</div>';}
   else{
     wrap.innerHTML='<canvas id="waistChart"></canvas>';wrap.style.height='200px';
     const filtered=data.filter(d=>d.cintura);
-    wChart=new Chart(document.getElementById('waistChart').getContext('2d'),{type:'line',data:{labels:filtered.map(d=>fmtDateS(d.date)),datasets:[{label:'Cintura (cm)',data:filtered.map(d=>d.cintura),borderColor:'#C97B8A',backgroundColor:'#C97B8A15',tension:.4,fill:true,pointBackgroundColor:'#C97B8A',pointRadius:5,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8B7355',font:{size:11},boxWidth:12}}},scales:{x:{grid:{color:'#3D3228'},ticks:{color:'#6B5A45',font:{size:10}}},y:{grid:{color:'#3D322850'},ticks:{color:'#6B5A45',font:{size:10}}}}}});
+    wChart=new Chart(document.getElementById('waistChart').getContext('2d'),{type:'line',data:{labels:filtered.map(d=>fmtDateS(d.date)),datasets:[{label:'Cintura (cm)',data:filtered.map(d=>d.cintura),borderColor:'#B05472',backgroundColor:'#B0547215',tension:.4,fill:true,pointBackgroundColor:'#B05472',pointRadius:5,borderWidth:2.5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8B6A48',font:{size:11},boxWidth:12}}},scales:{x:{grid:{color:'#E8D5C0'},ticks:{color:'#A08060',font:{size:10}}},y:{grid:{color:'#E8D5C050'},ticks:{color:'#A08060',font:{size:10}}}}}});
   }
   const hist=document.getElementById('bodyHistory');
-  if(data.length>0)hist.innerHTML=[...data].reverse().slice(0,12).map((e,i)=>`<div class="hist-row"><span class="hist-date">${fmtDate(e.date)}</span><div class="hist-vals">${e.cintura?`<span class="hist-v" style="color:var(--rose)">${e.cintura}cm</span>`:''} ${e.weight?`<span class="hist-v" style="color:var(--gold)">${e.weight}kg</span>`:''} ${e.diastase?`<span class="hist-v" style="color:var(--beige2)">D:${e.diastase}cm</span>`:''}</div><button class="del-btn" onclick="delBody(${data.length-1-i})">×</button></div>`).join('');
+  if(data.length>0)hist.innerHTML=[...data].reverse().slice(0,12).map((e,i)=>`<div class="hist-row"><span class="hist-date">${fmtDate(e.date)}</span><div class="hist-vals">${e.cintura?`<span class="hist-v" style="color:var(--rose)">${e.cintura}cm</span>`:''} ${e.weight?`<span class="hist-v" style="color:var(--gold)">${e.weight}kg</span>`:''} ${e.diastase?`<span class="hist-v" style="color:var(--muted2)">D:${e.diastase}cm</span>`:''}</div><button class="del-btn" onclick="delBody(${data.length-1-i})">×</button></div>`).join('');
 }
 function delBody(idx){if(!confirm('Remover?'))return;const d=loadBody();d.splice(idx,1);saveBody(d);renderCorpo();renderDashboard();}
-
 function renderDashboard(){
   const data=loadBody();
-  if(data.length>=2){const first=data.find(d=>d.cintura),last=[...data].reverse().find(d=>d.cintura);if(first&&last&&first!==last){const diff=(last.cintura-first.cintura).toFixed(1),col=parseFloat(diff)<0?'var(--sage)':'var(--rose)';document.getElementById('dashDelta').textContent=(parseFloat(diff)>0?'+':'')+diff+' cm';document.getElementById('dashDelta').style.color=col;}else if(first){document.getElementById('dashDelta').textContent=first.cintura+'cm inicial';}}
+  if(data.length>=2){const first=data.find(d=>d.cintura),last=[...data].reverse().find(d=>d.cintura);if(first&&last&&first!==last){const diff=(last.cintura-first.cintura).toFixed(1);document.getElementById('dashDelta').textContent=(parseFloat(diff)>0?'+':'')+diff+' cm';document.getElementById('dashDelta').style.color=parseFloat(diff)<0?'var(--sage)':'var(--rose)';}else if(first){document.getElementById('dashDelta').textContent=first.cintura+'cm inicial';}}
   const exD=EXERCISES.filter(e=>ST.exercises[e.id]).length,mD=MEALS.filter(m=>ST.meals[m.id]).length;
-  const exP=Math.round((exD/EXERCISES.length)*100),wP=Math.min(100,Math.round((ST.water/2500)*100)),dP=Math.round((mD/MEALS.length)*100);
-  setRing('ringEx',exP);document.getElementById('ringExTxt').textContent=exP+'%';
-  setRing('ringWater',wP);document.getElementById('ringWaterTxt').textContent=wP+'%';
-  setRing('ringDiet',dP);document.getElementById('ringDietTxt').textContent=dP+'%';
+  setRing('ringEx',Math.round((exD/EXERCISES.length)*100));document.getElementById('ringExTxt').textContent=Math.round((exD/EXERCISES.length)*100)+'%';
+  setRing('ringWater',Math.min(100,Math.round((ST.water/2500)*100)));document.getElementById('ringWaterTxt').textContent=Math.min(100,Math.round((ST.water/2500)*100))+'%';
+  setRing('ringDiet',Math.round((mD/MEALS.length)*100));document.getElementById('ringDietTxt').textContent=Math.round((mD/MEALS.length)*100)+'%';
   const today=new Date(),dayN=['D','S','T','Q','Q','S','S'];let bars='';
-  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const r=localStorage.getItem('andressa_day_'+d.toISOString().split('T')[0]);const w=r?JSON.parse(r).water||0:0;const pct=Math.min(100,(w/2500)*100);const col=pct>=100?'var(--sage)':pct>=60?'var(--gold)':pct>=30?'var(--rose)':'var(--border)';bars+=`<div class="water-bar-col"><div class="water-bar-fill-wrap"><div class="water-bar-fill" style="height:${Math.max(4,pct)}%;background:${col}"></div></div><div class="water-bar-day" style="color:${i===0?'var(--gold)':'var(--muted)'}">${dayN[d.getDay()]}</div></div>`;}
+  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const r=localStorage.getItem('andressa_day_'+d.toISOString().split('T')[0]);const w=r?JSON.parse(r).water||0:0;const pct=Math.min(100,(w/2500)*100);const col=pct>=100?'#4A7D5A':pct>=60?'#B8862A':pct>=30?'#B05472':'#E8D5C0';bars+=`<div class="water-bar-col"><div class="water-bar-fill-wrap"><div class="water-bar-fill" style="height:${Math.max(4,pct)}%;background:${col};border-radius:4px 4px 0 0"></div></div><div class="water-bar-day" style="color:${i===0?'var(--rose)':'var(--muted)'}">${dayN[d.getDay()]}</div></div>`;}
   document.getElementById('waterBars').innerHTML=bars;
   let wh='',te=0,tm=0;
-  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const key=d.toISOString().split('T')[0];const r=localStorage.getItem('andressa_day_'+key);let score=0;if(r){const s=JSON.parse(r);const ed=Object.values(s.exercises||{}).filter(Boolean).length;const md=Object.values(s.meals||{}).filter(Boolean).length;const wd=(s.water||0)>=2500?1:0;score=Math.round(((ed/4)*.4+(md/6)*.4+wd*.2)*100);te+=ed;tm+=md;}const it=i===0;const col=score>=80?'var(--sage)':score>=50?'var(--gold)':'var(--border)';wh+=`<div class="wday-block"><div class="wday-name">${dayN[d.getDay()]}</div><div class="wday-circle" style="background:${score>0?col+'20':'var(--card2)'};border-color:${it?'var(--gold)':score>0?col+'60':'var(--border)'};color:${score>0?col:'var(--muted2)'}">${score>0?score+'%':d.getDate()}</div></div>`;}
+  for(let i=6;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const key=d.toISOString().split('T')[0];const r=localStorage.getItem('andressa_day_'+key);let score=0;if(r){const s=JSON.parse(r);const ed=Object.values(s.exercises||{}).filter(Boolean).length;const md=Object.values(s.meals||{}).filter(Boolean).length;const wd=(s.water||0)>=2500?1:0;score=Math.round(((ed/4)*.4+(md/6)*.4+wd*.2)*100);te+=ed;tm+=md;}const it=i===0;const col=score>=80?'var(--sage)':score>=50?'var(--gold)':'var(--border)';const bg=score>=80?'var(--sage-light)':score>=50?'var(--gold-light)':'var(--card2)';wh+=`<div class="wday-block"><div class="wday-name">${dayN[d.getDay()]}</div><div class="wday-circle" style="background:${score>0?bg:'var(--card2)'};border-color:${it?'var(--rose)':score>0?col:'var(--border)'};color:${score>0?col:'var(--muted2)'}">${score>0?score+'%':d.getDate()}</div></div>`;}
   document.getElementById('weekGrid').innerHTML=wh;
-  document.getElementById('weekSummary').innerHTML=`🌸 Exercícios: <strong>${te}</strong> · 🍽️ Refeições: <strong>${tm}</strong><br>💧 Meta água: <strong>${[...Array(7)].filter((_,i)=>{const d=new Date(today);d.setDate(today.getDate()-i);const r=localStorage.getItem('andressa_day_'+d.toISOString().split('T')[0]);return r&&JSON.parse(r).water>=2500;}).length}/7 dias</strong> · ✨ Sequência: <strong>${GL.streak||0} dias</strong>`;
+  document.getElementById('weekSummary').innerHTML=`🌸 Exercícios: <strong>${te}</strong> · 🍽️ Refeições: <strong>${tm}</strong><br>✨ Sequência: <strong>${GL.streak||0} dias</strong>`;
+  document.getElementById('streakNum').textContent=GL.streak||0;
 }
-
 function checkDone(){
-  const allEx=EXERCISES.every(e=>ST.exercises[e.id]),allM=MEALS.every(m=>ST.meals[m.id]),water=ST.water>=2500;
-  if(allEx&&allM&&water){const today=todayKey();if(GL.lastDone!==today){GL.streak=(GL.streak||0)+1;GL.lastDone=today;saveGlobal();document.getElementById('streakNum').textContent=GL.streak;alert('🌸 Dia completo! Você arrasou! Sequência: '+GL.streak+' dias ✨');}}
+  if(EXERCISES.every(e=>ST.exercises[e.id])&&MEALS.every(m=>ST.meals[m.id])&&ST.water>=2500){const today=todayKey();if(GL.lastDone!==today){GL.streak=(GL.streak||0)+1;GL.lastDone=today;saveGlobal();document.getElementById('streakNum').textContent=GL.streak;alert('🌸 Dia completo! Você arrasou, Andressa! ✨ Sequência: '+GL.streak+' dias');}}
   renderDashboard();
 }
 function resetDay(){if(confirm('Resetar todo o progresso de hoje?')){ST={water:0,meals:{},exercises:{},diary:{}};saveState();renderAll();}}
 function goTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));document.getElementById('tab-'+name).classList.add('on');el.classList.add('active');if(name==='corpo')setTimeout(renderCorpo,50);if(name==='dash')renderDashboard();}
-
-function renderAll(){
-  renderHeader();renderHero();renderWater();renderMeals();renderDiary();
-  renderExercises('exCards');renderExercises('exCardsDetail');
-  renderDiet();renderDashboard();
-}
+function renderAll(){renderHeader();renderHero();renderWater();renderMeals();renderDiary();renderExercises('exCards');renderExercises('exCardsDetail');renderDiet();renderDashboard();}
 renderAll();
 setInterval(renderHeader,60000);
 </script>
