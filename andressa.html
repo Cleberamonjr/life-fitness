@@ -301,7 +301,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
     <div class="spacer"></div>
     <div style="font-size:22px;font-weight:800;letter-spacing:-.6px;margin-bottom:4px;color:var(--text)">Dieta 🍽️</div>
     <div style="font-size:13px;color:var(--muted2);margin-bottom:16px">Simples · ingredientes fáceis na China · anti-inflamatório</div>
-    <div class="diet-tip">🌿 <strong>Foco:</strong> colágeno, vitamina C, zinco e ômega-3 aceleram a recuperação do tecido conjuntivo. Evite açúcar refinado, frituras e excesso de sódio.</div>
+    <div class="diet-tip">🌿 <strong>Perfil:</strong> 55kg · manutenção de peso · rica em verduras e saladas. Colágeno, vitamina C e ômega-3 aceleram a recuperação da diástase. Evite açúcar refinado e frituras.</div>
     <div id="dietCards"></div>
     <div class="spacer"></div>
   </div>
@@ -317,7 +317,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
     <div class="card">
       <div class="corpo-grid">
         <div class="inp-block"><label>Cintura (cm)</label><input type="number" id="inCintura" placeholder="80" step="0.5"></div>
-        <div class="inp-block"><label>Peso (kg)</label><input type="number" id="inPeso" placeholder="67" step="0.1"></div>
+        <div class="inp-block"><label>Peso (kg)</label><input type="number" id="inPeso" placeholder="55" step="0.1"></div>
         <div class="inp-block"><label>Quadril (cm)</label><input type="number" id="inQuadril" placeholder="95" step="0.5"></div>
         <div class="inp-block"><label>Diástase (cm)</label><input type="number" id="inDiastase" placeholder="3.0" step="0.1"></div>
       </div>
@@ -368,20 +368,20 @@ const EXERCISES=[
   {id:'e4',name:'Prancha Isométrica',sets:'3x máximo que conseguir',note:'Estabilização global · progresso gradual',icon:'🧘',color:'#B8862A',bg:'var(--gold-light)'},
 ];
 const MEALS=[
-  {id:'m1',t:'7h00',n:'Café da manhã',d:'2 ovos mexidos • 1 fatia pão integral • 1 maçã • chá verde'},
-  {id:'m2',t:'10h00',n:'Lanche manhã',d:'1 iogurte natural • pitaya ou kiwi'},
-  {id:'m3',t:'12h30',n:'Almoço',d:'200g frango grelhado • 150g arroz • legumes à vontade'},
-  {id:'m4',t:'15h30',n:'Lanche tarde',d:'Punhado de castanhas • ou 2 ovos cozidos'},
-  {id:'m5',t:'19h00',n:'Jantar',d:'Sopa de legumes com frango • ou peixe + vegetais'},
-  {id:'m6',t:'21h30',n:'Antes de dormir',d:'1 iogurte grego • ou leite morno (opcional)'},
+  {id:'m1',t:'7h00',n:'Café da manhã',d:'2 ovos mexidos • salada de tomate + pepino • chá verde sem açúcar'},
+  {id:'m2',t:'10h00',n:'Lanche manhã',d:'1 iogurte natural • 1 fruta (maçã/kiwi/pitaya)'},
+  {id:'m3',t:'12h30',n:'Almoço',d:'150g frango grelhado • salada grande (folhas, cenoura, pepino, tomate) • 80g arroz (opcional)'},
+  {id:'m4',t:'15h30',n:'Lanche tarde',d:'Punhado de castanhas • ou palito de cenoura/pepino'},
+  {id:'m5',t:'19h00',n:'Jantar',d:'150g peixe ou frango • salada verde à vontade • legumes no vapor'},
+  {id:'m6',t:'21h30',n:'Opcional',d:'1 iogurte grego natural (se sentir fome)'},
 ];
 const DIET_DATA=[
-  {t:'7h00',n:'Café da manhã',d:'2 ovos (mexidos ou cozidos) • 1 fatia pão integral • 1 fruta (maçã/kiwi/pitaya) • chá verde sem açúcar'},
-  {t:'10h00',n:'Lanche manhã',d:'1 iogurte natural sem açúcar • 1 fruta • ou castanhas'},
-  {t:'12h30',n:'Almoço',d:'200g frango grelhado ou tofu • 150g arroz • legumes à vontade (brócolis, couve, cenoura) • 1 fio de azeite'},
-  {t:'15h30',n:'Lanche tarde',d:'2 ovos cozidos • ou castanhas • ou maçã com pasta de amendoim'},
-  {t:'19h00',n:'Jantar',d:'Sopa leve: frango + legumes + caldo natural • ou peixe grelhado + vegetais refogados · sem arroz à noite'},
-  {t:'21h30',n:'Opcional',d:'1 copo leite morno • ou iogurte grego com mel'},
+  {t:'7h00',n:'Café da manhã',d:'2 ovos mexidos ou cozidos • saladinha: tomate + pepino + azeite • chá verde sem açúcar'},
+  {t:'10h00',n:'Lanche manhã',d:'1 iogurte natural sem açúcar • 1 fruta (maçã / kiwi / pitaya)'},
+  {t:'12h30',n:'Almoço',d:'150g frango grelhado ou tofu • salada grande à vontade: folhas verdes + cenoura + pepino + tomate • 80g arroz (opcional — só se sentir necessidade) • azeite e limão'},
+  {t:'15h30',n:'Lanche tarde',d:'Palitos de cenoura e pepino • ou punhado de castanhas • ou 1 fruta'},
+  {t:'19h00',n:'Jantar',d:'150g peixe grelhado ou frango • salada verde à vontade • legumes no vapor: brócolis, couve-flor, abobrinha • sem arroz à noite'},
+  {t:'21h30',n:'Opcional',d:'1 iogurte grego natural — só se sentir fome'},
 ];
 function todayKey(){return new Date().toISOString().split('T')[0];}
 function loadState(){const r=localStorage.getItem('andressa_day_'+todayKey());return r?JSON.parse(r):{water:0,meals:{},exercises:{},diary:{}};}
@@ -463,7 +463,7 @@ function renderDiet(){
   document.getElementById('dietCards').innerHTML=`<div class="diet-day-card">${DIET_DATA.map(m=>`<div class="diet-row"><div class="diet-row-time">${m.t}</div><div class="diet-row-body"><div class="diet-row-name">${m.n}</div><div class="diet-row-desc">${m.d.split(' • ').join('<br>')}</div></div></div>`).join('')}</div>
   <div class="diet-day-card">
     <div style="font-size:12px;font-weight:700;color:var(--rose);margin-bottom:10px">🛒 Ingredientes na China</div>
-    <div style="font-size:13px;color:var(--text2);line-height:2.3">✓ Ovos 鸡蛋 · Frango 鸡肉 · Tofu 豆腐<br>✓ Arroz 大米 · Brócolis 西兰花 · Cenoura 胡萝卜<br>✓ Maçã 苹果 · Iogurte 原味酸奶 · Chá verde 绿茶<br>✓ Castanhas 坚果 · Azeite 橄榄油 · Pitaya 火龙果</div>
+    <div style="font-size:13px;color:var(--text2);line-height:2.3">✓ Ovos 鸡蛋 · Frango 鸡肉 · Tofu 豆腐 · Peixe 鱼<br>✓ Brócolis 西兰花 · Cenoura 胡萝卜 · Pepino 黄瓜<br>✓ Tomate 番茄 · Folhas verdes 生菜 · Couve 羽衣甘蓝<br>✓ Maçã 苹果 · Iogurte 原味酸奶 · Chá verde 绿茶<br>✓ Castanhas 坚果 · Azeite 橄榄油 · Pitaya 火龙果</div>
   </div>
   <div class="diet-day-card" style="background:var(--sage-light);border-color:#C0D8C4">
     <div style="font-size:12px;font-weight:700;color:var(--sage);margin-bottom:8px">💊 Suplementos recomendados</div>
