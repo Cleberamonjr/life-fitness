@@ -116,7 +116,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .macro-alert{border-radius:var(--rx);padding:10px 13px;font-size:12px;line-height:1.55;margin-top:6px;display:flex;gap:8px;align-items:flex-start;}
 .macro-alert.low{background:#FF455012;border:1px solid #FF456030;color:#FF8080;}
 .macro-alert.high{background:#FFB54715;border:1px solid #FFB54730;color:#D4A030;}
-.macro-alert.ok{background:#00D97E10;border:1px solid #00D97E30;color:#00B865;}
+.macro-alert.ok{background:linear-gradient(135deg,#00D97E12,#7C6FFF0A);border:1px solid #00D97E35;color:#00B865;}
 .macro-alert-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
 .macro-alert-body{}
 .macro-alert-title{font-weight:700;font-size:11px;letter-spacing:.04em;margin-bottom:2px;}
@@ -993,11 +993,19 @@ function buildMacroAlert(macro, dayVal, label, unit) {
   </div>`;
 }
 
+const MOTIVATION_MSGS = [
+  { icon:'💪', msg:'Macros no ponto. Corpo em modo de composição ideal — músculo crescendo, gordura saindo.' },
+  { icon:'🔥', msg:'Nutrição perfeita hoje. Cada grama trabalhando a favor do seu físico.' },
+  { icon:'🏆', msg:'Dia impecável nos macros. Consistência assim é o que separa resultados medianos dos excepcionais.' },
+  { icon:'⚡', msg:'Tudo dentro da meta. Síntese proteica maximizada, glicogênio cheio, hormônios equilibrados.' },
+  { icon:'🎯', msg:'Acertou em cheio nos macros. No cutting, dias assim valem mais do que uma semana de treino.' },
+  { icon:'🌟', msg:'Nutrição em dia. OMS e ISSN aprovam — seu corpo está recebendo exatamente o que precisa.' },
+];
+
 function renderMacroAlerts(p, c, f) {
   const kcal = p*4 + c*4 + f*9;
   const el = document.getElementById('macroAlerts');
   if (!el) return;
-  // Só mostrar se tiver pelo menos 2 refeições marcadas (evitar falso alarme logo de manhã)
   const meals = MEALS[dayType()];
   const mDone = meals.filter(m => ST.meals[m.id]).length;
   if (mDone < 2) { el.innerHTML = ''; return; }
@@ -1006,6 +1014,16 @@ function renderMacroAlerts(p, c, f) {
   html += buildMacroAlert('p', p, 'Proteína', 'g');
   html += buildMacroAlert('c', c, 'Carboidrato', 'g');
   html += buildMacroAlert('f', f, 'Gordura', 'g');
+  if (!html) {
+    const m = MOTIVATION_MSGS[Math.floor(new Date().getDate() % MOTIVATION_MSGS.length)];
+    html = `<div class="macro-alert ok">
+      <div class="macro-alert-icon">${m.icon}</div>
+      <div class="macro-alert-body">
+        <div class="macro-alert-title">Todos os macros na meta!</div>
+        <div>${m.msg}</div>
+      </div>
+    </div>`;
+  }
   el.innerHTML = html;
 }
 
