@@ -113,6 +113,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
 .macro-track{height:7px;background:var(--border);border-radius:99px;overflow:hidden;}
 .macro-fill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.34,1.56,.64,1);}
 .kcal-total{text-align:center;padding:14px;background:var(--card2);border-radius:var(--rs);margin-top:14px;border:1px solid var(--border);}
+.macro-alert{border-radius:var(--rx);padding:10px 13px;font-size:12px;line-height:1.55;margin-top:6px;display:flex;gap:8px;align-items:flex-start;}
+.macro-alert.low{background:#FF455012;border:1px solid #FF456030;color:#FF8080;}
+.macro-alert.high{background:#FFB54715;border:1px solid #FFB54730;color:#D4A030;}
+.macro-alert.ok{background:#00D97E10;border:1px solid #00D97E30;color:#00B865;}
+.macro-alert-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.macro-alert-body{}
+.macro-alert-title{font-weight:700;font-size:11px;letter-spacing:.04em;margin-bottom:2px;}
+.macro-alert-hist{font-size:10px;opacity:.75;margin-top:4px;padding-top:4px;border-top:1px solid rgba(255,255,255,.08);}
 .kcal-big{font-size:32px;font-weight:900;letter-spacing:-1px;}
 .kcal-sub{font-size:12px;color:var(--muted2);margin-top:3px;line-height:1.7;}
 
@@ -365,6 +373,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
         <div class="kcal-sub" id="kcalSub">de 2.580 kcal consumidas</div>
       </div>
     </div>
+    <div id="macroAlerts" style="margin-bottom:8px"></div>
     <button class="reset-btn" onclick="resetDay()">↺ Resetar progresso de hoje</button>
     <div class="spacer"></div>
   </div>
@@ -877,6 +886,129 @@ function renderDashboard(){const data=loadBody();if(data.length>=1){const first=
 function checkDone(){const meals=MEALS[dayType()];if(meals.every(m=>ST.meals[m.id])&&SUPPS.every(s=>ST.supps[s.id])&&ST.water>=3500){const today=todayKey();if(GL.lastDone!==today){GL.streak=(GL.streak||0)+1;GL.lastDone=today;if(!GL.weekDays)GL.weekDays={};GL.weekDays[today]=true;saveGlobal();document.getElementById('streakNum').textContent=GL.streak;alert('🎉 Dia 100% completo! Sequência: '+GL.streak+' dias 🔥');}}renderDashboard();}
 function resetDay(){if(confirm('Resetar todo o progresso de hoje?')){ST={water:0,meals:{},supps:{},extras:{},diary:{},workout:{activeDay:ST.workout?.activeDay||'A',ex:{},loads:{}}};saveState();renderAll();}}
 function goTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));document.getElementById('tab-'+name).classList.add('on');el.classList.add('active');if(name==='corpo')setTimeout(renderCorpo,50);if(name==='dash')renderDashboard();if(name==='treino'){renderDayTabs();renderWorkoutExercises();}}
+// ── MOTOR DE ALERTAS DE MACROS ──────────────────────────────────────────
+const MACRO_TARGETS = { p: 190, c: 290, f: 70, kcal: 2580 };
+
+// Limites científicos (% do alvo) — baseados em OMS/ISSN/ACSM
+const MACRO_THRESHOLDS = {
+  p:    { lowWarn: 0.75, lowCrit: 0.55, highWarn: 1.30, highCrit: 1.60 },
+  c:    { lowWarn: 0.60, lowCrit: 0.40, highWarn: 1.20, highCrit: 1.40 },
+  f:    { lowWarn: 0.55, lowCrit: 0.40, highWarn: 1.40, highCrit: 1.70 },
+  kcal: { lowWarn: 0.80, lowCrit: 0.65, highWarn: 1.15, highCrit: 1.30 },
+};
+
+// Impactos científicos por macro (curto e longo prazo)
+const MACRO_IMPACTS = {
+  p: {
+    lowDay:  { icon:'⚠️', title:'Proteína baixa hoje', msg:'Catabolismo muscular ativado — corpo degrada tecido para obter aminoácidos. Sintese proteica reduzida em até 40% (Phillips & Van Loon, 2011).', hist:'Déficit crônico de proteína reduz massa magra, força e imunidade. OMS recomenda mín. 0.8g/kg; atletas: 1.6–2.2g/kg.' },
+    critDay: { icon:'🚨', title:'Proteína muito baixa', msg:'Balanço nitrogenado negativo severo. Perda muscular ativa, recuperação comprometida e risco de deficiência imune (OMS, 2007).', hist:'Déficit severo prolongado → sarcopenia precoce, queda hormonal e perda de definição irreversível a curto prazo.' },
+    highDay: { icon:'ℹ️', title:'Proteína acima do alvo', msg:'Excesso moderado não causa dano; excedente convertido em glicose ou energia. Rins saudáveis toleram bem (ISSN, 2017).', hist:'Excesso crônico acima de 3g/kg pode sobrecarregar rins em predispostos. No seu perfil, até 2.5g/kg é seguro.' },
+  },
+  c: {
+    lowDay:  { icon:'⚠️', title:'Carboidrato baixo hoje', msg:'Glicogênio muscular não reposto — performance no próximo treino cai até 25%. Cortisol elevado prejudica composição (Ivy, 2004).', hist:'Déficit crônico de carbo → fadiga central, queda de força, catabolismo proteico e risco de hipoglicemia em treinos.' },
+    critDay: { icon:'🚨', title:'Carboidrato muito baixo', msg:'Cetose leve possível. Sem glicogênio, o corpo usa proteína como energia — você queima músculo, não gordura (OMS).', hist:'Restrição severa prolongada afeta cognição, humor, hormônios tireoidianos e performance aeróbica (ACSM, 2016).' },
+    highDay: { icon:'ℹ️', title:'Carboidrato acima do alvo', msg:'Excedente será armazenado como glicogênio ou gordura se o déficit calórico não for mantido (Acheson et al., 1988).', hist:'Excesso crônico acima do TDEE → ganho de gordura, resistência à insulina e dificuldade de cutting.' },
+  },
+  f: {
+    lowDay:  { icon:'⚠️', title:'Gordura baixa hoje', msg:'Absorção de vitaminas A, D, E, K comprometida. Testosterona pode cair — gordura é precursora de hormônios esteroides (OMS).', hist:'Ingestão crônica <20% das calorias totais prejudica perfil hormonal, saúde articular e cognitiva.' },
+    critDay: { icon:'🚨', title:'Gordura muito baixa', msg:'Risco de deficiência de ácidos graxos essenciais. Queda de testosterona documentada em <15% das kcal de gordura (ISSN).', hist:'Gordura <0.5g/kg cronicamente → queda de testosterona até 15%, pele seca, articulações comprometidas.' },
+    highDay: { icon:'ℹ️', title:'Gordura acima do alvo', msg:'Excesso denso em calorias (9 kcal/g). Dificulta manter déficit — verifique se o total de kcal ainda está dentro da meta.', hist:'Excesso crônico de gordura saturada eleva LDL. Priorize fontes insaturadas (azeite, castanhas, ovos).' },
+  },
+  kcal: {
+    lowDay:  { icon:'⚠️', title:'Calorias abaixo da meta', msg:'Déficit > 20% ativa modo de poupança: metabolismo basal cai, cortisol sobe e catabolismo muscular aumenta (Trexler et al., 2014).', hist:'Déficit crônico > 25% kcal → perda de massa magra, platô metabólico e reganho de gordura após ciclo.' },
+    critDay: { icon:'🚨', title:'Calorias muito baixas', msg:'Déficit severo ativa catabolismo proteico intenso. Para seu peso, abaixo de 1.700 kcal há risco real de perda muscular (ACSM).', hist:'Restrição calórica severa crônica → metabolismo adaptativo, desregulação hormonal e piora da composição corporal.' },
+    highDay: { icon:'ℹ️', title:'Calorias acima da meta', msg:'Excedente será armazenado. 500 kcal/dia extras = ~0.5kg gordura/semana. Verifique extravios nas refeições livres.', hist:'Superávit crônico >10% do TDEE dificulta o cutting. Prefira ajuste pontual, não restrição abrupta no dia seguinte.' },
+  },
+};
+
+function getMacroPct(val, target) { return target > 0 ? val / target : 0; }
+
+function getMacroStatus(macro, val) {
+  const t = MACRO_TARGETS[macro];
+  const th = MACRO_THRESHOLDS[macro];
+  const pct = getMacroPct(val, t);
+  if (pct <= 0) return null;
+  if (pct < th.lowCrit)  return 'critLow';
+  if (pct < th.lowWarn)  return 'low';
+  if (pct > th.highCrit) return 'critHigh';
+  if (pct > th.highWarn) return 'high';
+  return 'ok';
+}
+
+function getWeekMacroAvg() {
+  const today = new Date();
+  let totals = { p:0, c:0, f:0, kcal:0, days:0 };
+  for (let i = 1; i <= 7; i++) {
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const r = localStorage.getItem('clebe_day_' + d.toISOString().split('T')[0]);
+    if (!r) continue;
+    const s = JSON.parse(r);
+    let p=0, c2=0, f=0;
+    const meals = MEALS[dayType()] || [];
+    (MEALS.weekday || []).forEach(m => {
+      if (s.meals && s.meals[m.id]) { p+=m.p; c2+=m.c; f+=m.f; }
+    });
+    if (p+c2+f === 0) continue;
+    totals.p += p; totals.c += c2; totals.f += f;
+    totals.kcal += p*4 + c2*4 + f*9;
+    totals.days++;
+  }
+  if (!totals.days) return null;
+  return {
+    p: totals.p / totals.days,
+    c: totals.c / totals.days,
+    f: totals.f / totals.days,
+    kcal: totals.kcal / totals.days,
+    days: totals.days
+  };
+}
+
+function buildMacroAlert(macro, dayVal, label, unit) {
+  const status = getMacroStatus(macro, dayVal);
+  if (!status || status === 'ok') return '';
+  const isCrit = status.includes('crit');
+  const isLow = status.includes('Low');
+  const isHigh = status.includes('High') || (!isLow && !isCrit);
+  const imp = MACRO_IMPACTS[macro];
+  const data = isCrit && isLow ? imp.critDay : isLow ? imp.lowDay : imp.highDay;
+  const cls = isLow ? (isCrit ? 'low' : 'low') : 'high';
+  const hist = getWeekMacroAvg();
+  let histMsg = '';
+  if (hist && hist.days >= 3) {
+    const avg = hist[macro] || hist.kcal;
+    const avgStatus = getMacroStatus(macro, macro === 'kcal' ? hist.kcal : hist[macro]);
+    if (avgStatus && avgStatus !== 'ok') {
+      const avgPct = Math.round(getMacroPct(macro === 'kcal' ? hist.kcal : hist[macro], MACRO_TARGETS[macro]) * 100);
+      histMsg = `<div class="macro-alert-hist">📊 Média ${hist.days}d: ${Math.round(macro==='kcal'?hist.kcal:hist[macro])}${unit} (${avgPct}% da meta) — ${data.hist}</div>`;
+    }
+  }
+  const pct = Math.round(getMacroPct(dayVal, MACRO_TARGETS[macro]) * 100);
+  return `<div class="macro-alert ${cls}">
+    <div class="macro-alert-icon">${data.icon}</div>
+    <div class="macro-alert-body">
+      <div class="macro-alert-title">${data.title} — ${dayVal}${unit} (${pct}%)</div>
+      <div>${data.msg}</div>
+      ${histMsg}
+    </div>
+  </div>`;
+}
+
+function renderMacroAlerts(p, c, f) {
+  const kcal = p*4 + c*4 + f*9;
+  const el = document.getElementById('macroAlerts');
+  if (!el) return;
+  // Só mostrar se tiver pelo menos 2 refeições marcadas (evitar falso alarme logo de manhã)
+  const meals = MEALS[dayType()];
+  const mDone = meals.filter(m => ST.meals[m.id]).length;
+  if (mDone < 2) { el.innerHTML = ''; return; }
+  let html = '';
+  html += buildMacroAlert('kcal', kcal, 'Calorias totais', ' kcal');
+  html += buildMacroAlert('p', p, 'Proteína', 'g');
+  html += buildMacroAlert('c', c, 'Carboidrato', 'g');
+  html += buildMacroAlert('f', f, 'Gordura', 'g');
+  el.innerHTML = html;
+}
+
 function renderAll(){renderHeader();renderBanner();renderWater();renderSupps();renderMeals();renderExtras();renderDiary();renderDiet();renderDashboard();renderDayTabs();renderWorkoutExercises();renderHeroToday();}
 renderAll();
 renderCardioExtras();
