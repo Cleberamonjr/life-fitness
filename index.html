@@ -390,6 +390,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sa
       <div class="water-track" style="margin-bottom:0"><div class="water-fill" id="woProgressFill" style="width:0%;background:linear-gradient(90deg,var(--primary),#B06DFF)"></div></div>
     </div>
     <div id="woExercises"></div>
+    <div class="sec-lbl" style="margin-top:6px">Cardio extras — opcional</div>
+    <div class="card" id="cardioCard" style="padding:14px">
+      <div style="font-size:12px;color:var(--muted2);margin-bottom:12px">Adicione ao final do treino para incluir no gasto calórico</div>
+      <div id="cardioExtras"></div>
+    </div>
+    <div class="card" id="kcalDetailCard" style="padding:14px;display:none">
+      <div style="font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Gasto calórico detalhado</div>
+      <div id="kcalDetail"></div>
+    </div>
     <button class="wo-reset-btn" onclick="resetWorkout()">↺ Resetar treino de hoje</button>
     <div class="spacer"></div>
   </div>
@@ -598,8 +607,100 @@ function renderHeroToday(){
 }
 
 function parseSetReps(sets){const m=sets.match(/(\d+)x(\d+)(?:-(\d+))?/);if(!m)return{sets:3,reps:12};const s=parseInt(m[1]),r1=parseInt(m[2]),r2=m[3]?parseInt(m[3]):r1;return{sets:s,reps:Math.round((r1+r2)/2)};}
-function calcWorkoutStats(){const userWeight=ST.diary&&ST.diary.weight?ST.diary.weight:104;const loads=ST.workout&&ST.workout.loads?ST.workout.loads:{};const dayPlan=WP[getActiveDay()];let totalVolume=0,exDone=0,totalEx=dayPlan.ex.length;dayPlan.ex.forEach(ex=>{if(!isExDone(ex.id))return;exDone++;let load=loads[ex.id]||0;if(load<=0&&ex.solo)load=userWeight*0.3;if(load<=0)return;const{sets,reps}=parseSetReps(ex.sets);totalVolume+=sets*reps*load;});const fromVolume=totalVolume/45*(userWeight/75);const overhead=exDone*7;const calories=Math.round(fromVolume+overhead);const pct=totalEx>0?Math.round((exDone/totalEx)*100):0;return{calories,volume:Math.round(totalVolume),exDone,totalEx,pct};}
-function updateWorkoutSummary(){const{calories,volume,exDone,totalEx,pct}=calcWorkoutStats();document.getElementById('woCal').textContent=calories;document.getElementById('woVol').textContent=volume>=1000?(volume/1000).toFixed(1)+'t':volume+'kg';document.getElementById('woProgress').textContent=pct+'%';document.getElementById('woProgressTxt').textContent=exDone+' / '+totalEx+' exercícios';document.getElementById('woProgressFill').style.width=pct+'%';updateKcalDisplay();}
+function calcWorkoutStats(){
+  const userWeight=ST.diary&&ST.diary.weight?ST.diary.weight:104;
+  const loads=ST.workout&&ST.workout.loads?ST.workout.loads:{};
+  const dayPlan=WP[getActiveDay()];
+  let totalVolume=0,exDone=0,totalEx=dayPlan.ex.length,kcalDetail=[];
+  dayPlan.ex.forEach(ex=>{
+    if(!isExDone(ex.id))return;
+    exDone++;
+    let load=loads[ex.id]||0;
+    if(load<=0&&ex.solo)load=userWeight*0.32;
+    const{sets,reps}=parseSetReps(ex.sets);
+    const vol=sets*reps*(load||0);
+    totalVolume+=vol;
+    // Calorias por exercício: volume × fator metabólico ajustado ao peso corporal
+    // Fórmula: (sets × reps × carga_kg × 0.09) × (pesoCorpo/75)^0.67
+    const exKcal=load>0?Math.round(sets*reps*load*0.09*Math.pow(userWeight/75,0.67)):Math.round(sets*(reps/10)*3.5*(userWeight/75));
+    kcalDetail.push({name:ex.name,sets,reps,load,kcal:exKcal});
+  });
+  // Cardio extras
+  const cardio=ST.workout&&ST.workout.cardio?ST.workout.cardio:{};
+  let cardioKcal=0;
+  const CARDIO_METS={skipping:11.5,polichinelo:8.0,polisapato:7.5};
+  Object.entries(cardio).forEach(([k,v])=>{
+    if(v&&v.done&&v.min>0){
+      // Kcal = MET × peso(kg) × horas
+      const k2=Math.round(CARDIO_METS[k]*userWeight*(v.min/60));
+      cardioKcal+=k2;
+    }
+  });
+  const liftingKcal=kcalDetail.reduce((s,e)=>s+e.kcal,0);
+  const calories=liftingKcal+cardioKcal;
+  const pct=totalEx>0?Math.round((exDone/totalEx)*100):0;
+  return{calories,liftingKcal,cardioKcal,volume:Math.round(totalVolume),exDone,totalEx,pct,kcalDetail};
+}
+
+function setCardio(id,val){
+  if(!ST.workout)ST.workout={activeDay:getActiveDay(),ex:{},loads:{},cardio:{}};
+  if(!ST.workout.cardio)ST.workout.cardio={};
+  ST.workout.cardio[id]=ST.workout.cardio[id]||{done:false,min:0};
+  ST.workout.cardio[id].min=parseInt(val)||0;
+  saveState();renderCardioExtras();updateWorkoutSummary();
+}
+function toggleCardio(id){
+  if(!ST.workout)ST.workout={activeDay:getActiveDay(),ex:{},loads:{},cardio:{}};
+  if(!ST.workout.cardio)ST.workout.cardio={};
+  ST.workout.cardio[id]=ST.workout.cardio[id]||{done:false,min:10};
+  ST.workout.cardio[id].done=!ST.workout.cardio[id].done;
+  if(ST.workout.cardio[id].done&&!ST.workout.cardio[id].min)ST.workout.cardio[id].min=10;
+  saveState();renderCardioExtras();updateWorkoutSummary();
+}
+function renderCardioExtras(){
+  const CARDIOS=[
+    {id:'skipping',name:'Skipping (Pular Corda)',icon:'🪢',kcalMin:11.5},
+    {id:'polichinelo',name:'Polichinelo',icon:'🙆',kcalMin:8.0},
+    {id:'polisapato',name:'Polisapato',icon:'👟',kcalMin:7.5},
+  ];
+  const cardio=ST.workout&&ST.workout.cardio?ST.workout.cardio:{};
+  const userWeight=ST.diary&&ST.diary.weight?ST.diary.weight:104;
+  const el=document.getElementById('cardioExtras');
+  if(!el)return;
+  el.innerHTML=CARDIOS.map((cd,i)=>{
+    const st=cardio[cd.id]||{done:false,min:0};
+    const kcalEst=Math.round(cd.kcalMin*userWeight*((st.min||10)/60));
+    const isLast=i===CARDIOS.length-1;
+    return`<div style="display:flex;align-items:center;gap:12px;padding:10px 0;${isLast?'':'border-bottom:1px solid var(--border)'}">
+      <div style="font-size:22px">${cd.icon}</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:${st.done?'var(--green)':'var(--text)'}">${cd.name}</div>
+        <div style="font-size:11px;color:var(--muted2);margin-top:2px">~${kcalEst} kcal em <input type="number" style="width:38px;background:var(--card2);border:1px solid var(--border);border-radius:6px;padding:2px 4px;color:var(--text);font-size:11px;font-weight:700;text-align:center;outline:none;display:inline-block;" placeholder="10" value="${st.min||''}" min="1" max="120" onclick="event.stopPropagation()" onchange="setCardio('${cd.id}',this.value)"> min</div>
+      </div>
+      <div style="width:32px;height:32px;border-radius:50%;border:2px solid ${st.done?'var(--green)':'var(--border2)'};background:${st.done?'var(--green)':'transparent'};display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);flex-shrink:0;color:#fff;font-size:14px;" onclick="toggleCardio('${cd.id}')">${st.done?'✓':''}</div>
+    </div>`;
+  }).join('');
+}
+function updateWorkoutSummary(){
+  const{calories,liftingKcal,cardioKcal,volume,exDone,totalEx,pct,kcalDetail}=calcWorkoutStats();
+  document.getElementById('woCal').textContent=calories;
+  document.getElementById('woVol').textContent=volume>=1000?(volume/1000).toFixed(1)+'t':volume+'kg';
+  document.getElementById('woProgress').textContent=pct+'%';
+  document.getElementById('woProgressTxt').textContent=exDone+' / '+totalEx+' exercícios';
+  document.getElementById('woProgressFill').style.width=pct+'%';
+  // Detalhe de calorias
+  const dc=document.getElementById('kcalDetailCard');
+  const dd=document.getElementById('kcalDetail');
+  if(dc&&dd&&kcalDetail&&kcalDetail.length>0){
+    dc.style.display='block';
+    let html=kcalDetail.map(e=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--text2)">${e.name}</span><span style="color:var(--orange);font-weight:700">${e.kcal} kcal</span></div>`).join('');
+    if(cardioKcal>0)html+=`<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12px"><span style="color:var(--blue)">🏃 Cardio extra</span><span style="color:var(--blue);font-weight:700">${cardioKcal} kcal</span></div>`;
+    html+=`<div style="display:flex;justify-content:space-between;padding:10px 0;font-size:14px;font-weight:800"><span style="color:var(--text)">Total queimado</span><span style="color:var(--green)">${calories} kcal</span></div>`;
+    dd.innerHTML=html;
+  }else if(dc)dc.style.display='none';
+  renderCardioExtras();
+  updateKcalDisplay();
+}
 function updateKcalDisplay(){let p=0,c=0,f=0;MEALS[dayType()].forEach(m=>{if(ST.meals[m.id]){p+=m.p;c+=m.c;f+=m.f;}});if(ST.extras)EXTRAS.forEach(e=>{const q=ST.extras[e.id]||0;if(q){p+=e.p*q;c+=e.c*q;f+=e.f*q;}});const dietKcal=p*4+c*4+f*9;const{calories:woKcal}=calcWorkoutStats();document.getElementById('kcalNum').textContent=dietKcal+' kcal';if(woKcal>0){document.getElementById('kcalSub').innerHTML=`de 2.580 kcal consumidas &nbsp;·&nbsp; <span style="color:var(--orange)">🔥 −${woKcal} kcal treino</span><br><span style="color:var(--green);font-size:11px">Saldo: ${dietKcal-woKcal} kcal líquidas</span>`;}else{document.getElementById('kcalSub').textContent='de 2.580 kcal consumidas';}renderHeroToday();}
 function setLoad(id,val){if(!ST.workout)ST.workout={activeDay:getActiveDay(),ex:{},loads:{}};if(!ST.workout.loads)ST.workout.loads={};const v=parseFloat(val)||0;ST.workout.loads[id]=v;saveState();if(v>0){const h=loadLoadHistory();h[id]={load:v,date:todayKey()};saveLoadHistory(h);}const el=document.querySelector(`[data-load-id="${id}"]`);if(el){el.classList.toggle('has-val',v>0);}updateWorkoutSummary();updateKcalDisplay();}
 function getLastLoad(id){const h=loadLoadHistory();return h[id]?h[id].load:null;}
@@ -610,7 +711,7 @@ function renderDayTabs(){const active=getActiveDay();document.getElementById('da
 function selectDay(d,el){setActiveDay(d);document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));if(el)el.classList.add('active');renderWorkoutExercises();renderDayTabs();}
 function renderWorkoutExercises(){const day=WP[getActiveDay()];if(!day)return;const loads=ST.workout&&ST.workout.loads?ST.workout.loads:{};let html='';let i=0;while(i<day.ex.length){const ex=day.ex[i];const isDone=isExDone(ex.id);const next=day.ex[i+1];const hasNext=next&&next.biset;const lastLoad=getLastLoad(ex.id);const curLoad=loads[ex.id]||'';html+=`<div class="wo-group"><div class="wo-ex-row ${isDone?'done':''} ${ex.solo?'solo-ex':''}" onclick="toggleEx('${ex.id}')"><div class="wo-ex-chk">${isDone?'✓':''}</div><div class="wo-ex-body"><div class="wo-ex-name">${ex.name}</div><div class="wo-ex-meta"><span class="wo-sets-badge">${ex.sets}</span>${ex.note?`<span class="wo-note">${ex.note}</span>`:''}${ex.solo?'<span class="solo-badge">🦵 só você</span>':''}</div><div class="load-wrap" onclick="event.stopPropagation()"><input type="number" class="load-input ${curLoad?'has-val':''}" data-load-id="${ex.id}" placeholder="${lastLoad?lastLoad+'kg':'carga kg'}" value="${curLoad||''}" onchange="setLoad('${ex.id}',this.value)" step="2.5" min="0"><span class="load-unit">kg</span>${lastLoad&&!curLoad?`<span class="load-hist">última: ${lastLoad}kg</span>`:''}</div></div></div>`;if(hasNext){const nx=next;const nxDone=isExDone(nx.id);const nxLastLoad=getLastLoad(nx.id);const nxCurLoad=loads[nx.id]||'';html+=`<div class="biset-connector"><div class="biset-line"></div><span class="biset-badge">⚡ biset</span></div><div class="wo-ex-row ${nxDone?'done':''} ${nx.solo?'solo-ex':''}" onclick="toggleEx('${nx.id}')"><div class="wo-ex-chk">${nxDone?'✓':''}</div><div class="wo-ex-body"><div class="wo-ex-name">${nx.name}</div><div class="wo-ex-meta"><span class="wo-sets-badge">${nx.sets}</span>${nx.note?`<span class="wo-note">${nx.note}</span>`:''}${nx.solo?'<span class="solo-badge">🦵 só você</span>':''}</div>${!nx.solo?`<div class="load-wrap" onclick="event.stopPropagation()"><input type="number" class="load-input ${nxCurLoad?'has-val':''}" data-load-id="${nx.id}" placeholder="${nxLastLoad?nxLastLoad+'kg':'carga kg'}" value="${nxCurLoad||''}" onchange="setLoad('${nx.id}',this.value)" step="2.5" min="0"><span class="load-unit">kg</span>${nxLastLoad&&!nxCurLoad?`<span class="load-hist">última: ${nxLastLoad}kg</span>`:''}</div>`:''}</div></div>`;i+=2;}else{i++;}html+='</div>';}document.getElementById('woExercises').innerHTML=html;updateWorkoutSummary();}
 function toggleEx(id){if(!ST.workout)ST.workout={activeDay:getActiveDay(),ex:{},loads:{}};if(!ST.workout.ex)ST.workout.ex={};ST.workout.ex[id]=!ST.workout.ex[id];saveState();renderWorkoutExercises();renderDayTabs();}
-function resetWorkout(){if(!confirm('Resetar todos os exercícios de hoje?'))return;if(ST.workout){ST.workout.ex={};ST.workout.loads={};}saveState();renderWorkoutExercises();renderDayTabs();}
+function resetWorkout(){if(!confirm('Resetar todos os exercícios de hoje?'))return;if(ST.workout){ST.workout.ex={};ST.workout.loads={};ST.workout.cardio={};}saveState();renderWorkoutExercises();renderDayTabs();renderCardioExtras();}
 function makeSilhouette(bf,active){const cx=50,col=active?'#7C6FFF':'#252535',tc=active?'#EAE8F5':'#52525b';const p={7:[13,0],10:[15,0],12:[18,1],15:[22,2],18:[27,3],20:[32,4]};const[wW,lH]=p[bf]||[20,1];const sW=24,hW=Math.max(wW+5,sW*0.8);const bd=`M${cx-sW},30 C${cx-sW},42 ${cx-wW-lH},56 ${cx-wW},65 C${cx-wW},76 ${cx-hW+2},82 ${cx-hW+2},90 L${cx-12},148 L${cx-4},148 L${cx-4},98 L${cx+4},98 L${cx+4},148 L${cx+12},148 L${cx+hW-2},90 C${cx+hW-2},82 ${cx+wW},76 ${cx+wW},65 C${cx+wW+lH},56 ${cx+sW},42 ${cx+sW},30 Z`;return`<svg viewBox="0 0 100 165" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%"><circle cx="${cx}" cy="13" r="11" fill="${col}"/><rect x="${cx-5}" y="23" width="10" height="9" rx="2" fill="${col}"/><rect x="${cx-sW}" y="28" width="${sW*2}" height="7" rx="3" fill="${col}"/><path d="${bd}" fill="${col}"/><path d="M${cx-sW},30 L${cx-sW-8},68 L${cx-sW-3},68 L${cx-sW+5},35 Z" fill="${col}"/><path d="M${cx+sW},30 L${cx+sW+8},68 L${cx+sW+3},68 L${cx+sW-5},35 Z" fill="${col}"/>${lH>1?`<ellipse cx="${cx}" cy="70" rx="${lH*2.5}" ry="${lH*1.2}" fill="${col}" opacity="0.35"/>`:''}  <text x="${cx}" y="160" text-anchor="middle" font-size="10" font-weight="800" fill="${tc}" font-family="-apple-system,sans-serif">${bf}%</text></svg>`;}
 function renderSilhouettes(userBF){document.getElementById('silGrid').innerHTML=BF_LEVELS.map(l=>{const active=userBF!==null&&Math.abs(l.pct-userBF)<=2;return`<div class="sil-item ${active?'active':''}"><div class="sil-svg">${makeSilhouette(l.pct,active)}</div><div class="sil-label" style="color:${active?'var(--primary)':'var(--text)'}">${l.label}</div><div class="sil-desc">${l.desc}</div></div>`;}).join('');}
 function calcBF(){const neck=parseFloat(document.getElementById('bfNeck').value);const waist=parseFloat(document.getElementById('bfWaist').value);const height=parseFloat(document.getElementById('bfHeight').value)||181;if(!neck||!waist){alert('Preencha pescoço e cintura.');return;}if(waist<=neck){alert('Cintura deve ser maior que pescoço.');return;}const bf=86.010*Math.log10(waist-neck)-70.041*Math.log10(height)+36.76;const bfR=Math.max(3,Math.min(50,Math.round(bf*10)/10));const lvl=BF_LEVELS.reduce((a,b)=>Math.abs(b.pct-bfR)<Math.abs(a.pct-bfR)?b:a);const toGoal=Math.max(0,(bfR-12)*0.4).toFixed(1);document.getElementById('bfResult').style.display='block';document.getElementById('bfResult').innerHTML=`<div class="bf-result-card"><div class="bf-big">${bfR}%</div><div class="bf-sub">Classificação: <strong>${lvl.label}</strong> — ${lvl.desc}</div><div class="bf-method">Método Naval · Cintura ${waist}cm · Pescoço ${neck}cm · Altura ${height}cm</div>${toGoal>0?`<div style="margin-top:10px;font-size:12px;color:var(--muted2)">Para chegar a 12%: ~<strong style="color:var(--green)">${toGoal}kg de gordura</strong></div>`:'<div style="margin-top:8px;font-size:13px;color:var(--green);font-weight:700">✓ Físico enxuto!</div>'}</div>`;GL.lastBF=bfR;saveGlobal();renderSilhouettes(bfR);renderDashboard();}
@@ -658,6 +759,7 @@ function resetDay(){if(confirm('Resetar todo o progresso de hoje?')){ST={water:0
 function goTab(name,el){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));document.querySelectorAll('.nav-it').forEach(n=>n.classList.remove('active'));document.getElementById('tab-'+name).classList.add('on');el.classList.add('active');if(name==='corpo')setTimeout(renderCorpo,50);if(name==='dash')renderDashboard();if(name==='treino'){renderDayTabs();renderWorkoutExercises();}}
 function renderAll(){renderHeader();renderBanner();renderWater();renderSupps();renderMeals();renderExtras();renderDiary();renderDiet();renderDashboard();renderDayTabs();renderWorkoutExercises();renderHeroToday();}
 renderAll();
+renderCardioExtras();
 setInterval(renderHeader,60000);
 </script>
 </body>
